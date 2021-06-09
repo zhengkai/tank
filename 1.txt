@@ -1,0 +1,7 @@
+https://tbox.wot.360.cn/rank/less
+
+https://tbox.wot.360.cn/rank/more?rank_type=default&page=1&size=300&type=&tier=6&sort=frags_avg&tank_sort=
+
+https://tbox.wot.360.cn/rank/more?rank_type=higher&page=1&size=30&type=mediumTank&tier=9&sort=damage_dealt_avg&tank_sort=1
+
+https://tbox.wot.360.cn/rank/more?rank_type=higher&page=1&size=30&type=&tier=7&sort=damage_dealt_avg&tank_sort=3,2
