@@ -3,28 +3,43 @@ package spider
 import (
 	"fmt"
 	"io/ioutil"
+	"project/zj"
 
 	"github.com/zhengkai/zu"
 )
 
 // CrawlAll ...
-func CrawlAll(simulate bool) (err error) {
+func CrawlAll() (err error) {
+	return crawlAll(false)
+}
+
+// CrawlAllSimulate ...
+func CrawlAllSimulate() (err error) {
+	return crawlAll(true)
+}
+
+func crawlAll(simulate bool) (err error) {
+
+	var cnt int
+	var cntSum int
 
 	for lv := 1; lv <= 10; lv++ {
 		for _, higher := range []bool{false, true} {
 			for _, ty := range []int{0, 1, 2} {
-				err = Crawl(lv, higher, ty, simulate)
+				cnt, err = Crawl(lv, higher, ty, simulate)
+				cntSum += cnt
 				if err != nil {
 					break
 				}
 			}
 		}
 	}
+	zj.J(`crawl`, cntSum)
 	return
 }
 
 // Crawl ...
-func Crawl(tier int, higher bool, ty int, simulate bool) (err error) {
+func Crawl(tier int, higher bool, ty int, simulate bool) (cnt int, err error) {
 
 	t := `default`
 	if higher {
@@ -66,9 +81,10 @@ func Crawl(tier int, higher bool, ty int, simulate bool) (err error) {
 			ioutil.WriteFile(file, ab, 0666)
 		}
 
+		cnt++
 		next, err = Parse(ab)
 		if err != nil {
-			return
+			break
 		}
 
 		if !next {

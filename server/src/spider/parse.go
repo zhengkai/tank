@@ -3,9 +3,15 @@ package spider
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"project/pb"
 	"project/tank"
+	"regexp"
+	"strconv"
+	"strings"
 )
+
+var patternDate = regexp.MustCompile(`^(\d{4})-(\d{2})-(\d{2}) `)
 
 // Parse ...
 func Parse(ab []byte) (next bool, err error) {
@@ -27,7 +33,10 @@ func Parse(ab []byte) (next bool, err error) {
 	}
 
 	for _, v := range d.Data.Ranking {
-		parseOne(v)
+		err = parseOne(v, d.Data.Modify)
+		if err != nil {
+			return
+		}
 	}
 
 	next = d.Data.Next == 1
@@ -35,6 +44,28 @@ func Parse(ab []byte) (next bool, err error) {
 }
 
 // parseOne ...
-func parseOne(raw *pb.TankRaw) {
-	tank.Basic(raw)
+func parseOne(raw *pb.TankRaw, date string) (err error) {
+
+	s := patternDate.FindAllStringSubmatch(date, 1)
+	if len(s) != 1 {
+		err = fmt.Errorf(`unknown date: %s`, date)
+		return
+	}
+
+	di, err := strconv.Atoi(strings.Join(s[0][1:], ``))
+	if err != nil {
+		return
+	}
+
+	_, err = tank.Basic(raw)
+	if err != nil {
+		return
+	}
+
+	_, err = tank.Stats(raw, di)
+	if err != nil {
+		return
+	}
+
+	return
 }

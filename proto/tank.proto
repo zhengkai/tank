@@ -18,6 +18,12 @@ message TankEnum {
 		S = 3;
 		D = 4;
 		R = 5;
+		I = 6;
+		J = 7;
+		F = 8;
+		B = 9;
+		V = 10;
+		Y = 11;
 	}
 	enum shop {
 		Silver = 0;
@@ -47,6 +53,26 @@ message TankRaw {
 	string tank_nation = 18;
 	uint32 tank_status = 19;
 	string battle_rate = 20;
+}
+
+message TankList {
+	repeated Tank list = 1;
+}
+
+message TankStatByDate {
+	repeated TankStatDate list = 1;
+}
+
+message TankStatDate {
+	uint32 date = 1;
+	TankStats stats = 2;
+	TankStats statsHigher = 3;
+}
+
+message Tank {
+	TankBase base = 1;
+	TankStats stats = 2;
+	TankStats statsHigher = 3;
 }
 
 message TankBase {

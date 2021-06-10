@@ -2,13 +2,19 @@ package project
 
 import (
 	"project/build"
-	"project/spider"
+	"project/db"
+	"project/tank"
 )
 
 func common() {
 	build.DumpBuildInfo()
 
-	spider.CrawlAll(true)
+	db.WaitConn(`wot:wot@/wot`)
 
-	// db.WaitConn(`user:pass@/dbname`)
+	tank.InitMap()
+
+	// spider.CrawlAllSimulate()
+
+	tank.Build()
+	// spider.CrawlAll()
 }

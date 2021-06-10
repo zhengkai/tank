@@ -1,0 +1,6 @@
+CREATE USER 'wot'@'localhost' IDENTIFIED WITH caching_sha2_password BY 'wot';
+GRANT USAGE ON *.* TO 'wot'@'localhost';
+ALTER USER 'wot'@'localhost' REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
+
+GRANT SELECT, INSERT, UPDATE, DELETE, LOCK TABLES ON `wot`.* TO 'wot'@'localhost';
+ALTER USER 'wot'@'localhost' ;

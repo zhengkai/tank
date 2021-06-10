@@ -2,17 +2,21 @@ package tank
 
 import (
 	"project/pb"
-	"project/zj"
 )
 
 // Basic ...
-func Basic(raw *pb.TankRaw) {
+func Basic(raw *pb.TankRaw) (tb *pb.TankBase, err error) {
 
-	t := getTankType(raw.TankType)
-
-	var n pb.TankEnumNation
-
-	zj.J(`base`, raw.TankName, t, n)
+	tb = &pb.TankBase{
+		ID:     raw.TankId,
+		Name:   raw.TankName,
+		Tier:   raw.TankTier,
+		Nation: getTankNation(raw.TankNation),
+		Type:   getTankType(raw.TankType),
+		Shop:   getTankShop(raw.TankStatus),
+	}
+	err = poolUpdate(tb)
+	return
 }
 
 func getTankType(s string) (t pb.TankEnumType) {
@@ -37,15 +41,25 @@ func getTankNation(s string) (t pb.TankEnumNation) {
 		t = pb.TankEnum_S
 	case `usa`:
 		t = pb.TankEnum_M
+	case `china`:
+		t = pb.TankEnum_C
+	case `france`:
+		t = pb.TankEnum_F
+	case `uk`:
+		t = pb.TankEnum_Y
+	case `germany`:
+		t = pb.TankEnum_D
+	case `japan`:
+		t = pb.TankEnum_R
+	case `sweden`:
+		t = pb.TankEnum_V
+	case `italy`:
+		t = pb.TankEnum_I
+	case `poland`:
+		t = pb.TankEnum_B
+	case `czech`:
+		t = pb.TankEnum_J
 	}
-
-	// poland
-	// italy
-	// uk
-	// china
-	// sweden
-	// japan
-	// france
 
 	return
 }
