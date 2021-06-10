@@ -1,0 +1,16 @@
+syntax = "proto3";
+option go_package = "/pb";
+package pb;
+
+import "tank.proto";
+
+message Rank {
+	RankData data = 1;
+	string errmsg = 2;
+}
+
+message RankData {
+	string modify = 1;
+	uint32 next = 2;
+	repeated TankRaw ranking = 3;
+}
