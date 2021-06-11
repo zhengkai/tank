@@ -4,11 +4,15 @@ import (
 	"project/db"
 	"project/pb"
 	"project/zj"
+	"sync"
 
 	"google.golang.org/protobuf/proto"
 )
 
 var mapBase = make(map[uint32]*pb.TankBase)
+
+// Mux ...
+var Mux sync.Mutex
 
 // InitMap ...
 func InitMap() {
@@ -24,7 +28,9 @@ func InitMap() {
 
 func poolUpdate(tb *pb.TankBase) (err error) {
 
+	Mux.Lock()
 	old, ok := mapBase[tb.ID]
+	Mux.Unlock()
 	if ok && proto.Equal(old, tb) {
 		return
 	}

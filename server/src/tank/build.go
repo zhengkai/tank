@@ -2,11 +2,13 @@ package tank
 
 import (
 	"fmt"
+	"io/ioutil"
 	"project/config"
 	"project/db"
 	"project/pb"
 	"project/zj"
 
+	"github.com/zhengkai/zu"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -17,6 +19,7 @@ func Build() (err error) {
 
 	tl := &pb.TankList{}
 
+	Mux.Lock()
 	for _, tb := range mapBase {
 		t := &pb.Tank{
 			Base: tb,
@@ -30,6 +33,7 @@ func Build() (err error) {
 
 		tl.List = append(tl.List, t)
 	}
+	Mux.Unlock()
 
 	if len(tl.List) < config.AssertCount {
 		err = fmt.Errorf(`tank list count: %d`, len(tl.List))
@@ -41,7 +45,29 @@ func Build() (err error) {
 		return
 	}
 
-	zj.J(`build`, len(ab), len(tl.List))
+	file := File()
+
+	err = ioutil.WriteFile(file, ab, 0666)
+	if err != nil {
+		return
+	}
+
+	err = zu.Brotli(file)
+	if err != nil {
+		return
+	}
+
+	err = zu.Gzip(file)
+	if err != nil {
+		return
+	}
+
+	zj.J(`build`, file, len(ab), len(tl.List))
 
 	return
+}
+
+// File ...
+func File() string {
+	return config.FilePath + `/list.pb`
 }

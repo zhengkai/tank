@@ -8,6 +8,6 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/zhengkai/coral v0.0.3 // indirect
 	github.com/zhengkai/zj v1.0.6
-	github.com/zhengkai/zu v1.0.9 // indirect
+	github.com/zhengkai/zu v1.0.11 // indirect
 	google.golang.org/protobuf v1.26.0 // indirect
 )

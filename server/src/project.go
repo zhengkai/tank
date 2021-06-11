@@ -8,16 +8,18 @@ import (
 func Dev() {
 
 	common()
+
 	zj.J(`dev start`)
 
-	zj.Close()
+	select {}
 }
 
 // Prod ...
 func Prod() {
 
 	common()
+
 	zj.J(`prod start`)
 
-	zj.Close()
+	select {}
 }
