@@ -1,1 +1,10 @@
-/* You can add global styles to this file, and also import other style files */
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+
+.mono {
+	font-family: var(--bs-font-monospace);
+}
+
+td.num {
+	text-align: right;
+	font-family: var(--bs-font-monospace);
+}

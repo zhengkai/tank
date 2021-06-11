@@ -1,1 +1,10 @@
-<p>list works!</p>
+<div class="container">
+<table class="table">
+	<tr *ngFor="let t of li">
+		<td>{{ t?.base?.tier }}</td>
+		<td>{{ t?.base?.name }}</td>
+		<td class="num">{{ t?.stats?.battles }}</td>
+		<td class="num">{{ getDmg(t?.stats) | number }}</td>
+	</tr>
+</table>
+</div>
