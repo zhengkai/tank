@@ -4,7 +4,6 @@ import (
 	"project/build"
 	"project/cron"
 	"project/db"
-	"project/spider"
 	"project/tank"
 )
 
@@ -13,7 +12,7 @@ func common() {
 
 	db.WaitConn(`wot:wot@/wot`)
 
-	spider.CrawlAllSimulate()
+	// spider.CrawlAllSimulate()
 
 	tank.InitMap()
 

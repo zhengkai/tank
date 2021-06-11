@@ -1,4 +1,4 @@
-BIN="the-server"
+BIN="tank-server"
 BUILD_PACKAGE="project/build"
 
 TYPE="${1:-dev}"

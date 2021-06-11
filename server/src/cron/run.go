@@ -3,6 +3,7 @@ package cron
 import (
 	"project/spider"
 	"project/tank"
+	"project/zj"
 	"time"
 
 	"github.com/zhengkai/zu"
@@ -47,6 +48,7 @@ func Run() {
 func do() {
 	for {
 		<-chDo
+		zj.J(`cron`)
 		spider.CrawlAll()
 		tank.Build()
 	}
