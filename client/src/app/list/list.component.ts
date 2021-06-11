@@ -108,10 +108,13 @@ export class ListComponent implements OnInit {
 	) {
 	}
 
-	clickTier(i: number) {
+	clickTier(i: number, ev: MouseEvent) {
+
 		const idx = this.selectTier.indexOf(i);
 		if (idx == -1) {
-			this.selectTier.length = 0;
+			if (!ev.ctrlKey) {
+				this.selectTier.length = 0;
+			}
 			this.selectTier.push(i);
 		} else {
 			this.selectTier.splice(idx, 1);
@@ -121,10 +124,12 @@ export class ListComponent implements OnInit {
 		this.select();
 	}
 
-	clickShop(id: any) {
+	clickShop(id: any, ev: MouseEvent) {
 		const idx = this.selectShop.indexOf(id);
 		if (idx == -1) {
-			this.selectShop.length = 0;
+			if (!ev.ctrlKey) {
+				this.selectShop.length = 0;
+			}
 			this.selectShop.push(id);
 		} else {
 			this.selectShop.splice(idx, 1);
@@ -134,11 +139,13 @@ export class ListComponent implements OnInit {
 		this.select();
 	}
 
-	clickType(t: any) {
+	clickType(t: any, ev: MouseEvent) {
 		const ty = t.id;
 		const idx = this.selectType.indexOf(ty);
 		if (idx == -1) {
-			this.selectType.length = 0;
+			if (!ev.ctrlKey) {
+				this.selectType.length = 0;
+			}
 			this.selectType.push(ty);
 		} else {
 			this.selectType.splice(idx, 1);

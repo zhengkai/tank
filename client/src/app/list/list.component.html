@@ -1,36 +1,38 @@
 <div class="container topbar">
+	<div class="btn-group" role="group">
+		<button *ngFor="let t of tierList" (click)="clickTier(t, $event)" type="button" class="btn {{ selectTier.includes(t) ? 'btn-primary' : 'btn-outline-primary' }}">{{ t }}</button>
+	</div>
 
-<div class="btn-group" role="group">
-	<button *ngFor="let t of tierList" (click)="clickTier(t)" type="button" class="btn {{ selectTier.includes(t) ? 'btn-primary' : 'btn-outline-primary' }}">{{ t }}</button>
-</div>
+	<div class="btn-group" role="group">
+		<button *ngFor="let t of typeList" (click)="clickType(t, $event)" type="button" class="btn {{ selectType.includes(t.id) ? 'btn-primary' : 'btn-outline-primary' }}">{{ t.name }}</button>
+	</div>
 
-<div class="btn-group" role="group">
-	<button *ngFor="let t of typeList" (click)="clickType(t)" type="button" class="btn {{ selectType.includes(t.id) ? 'btn-primary' : 'btn-outline-primary' }}">{{ t.name }}</button>
-</div>
+	<div class="btn-group" role="group">
+		<button *ngFor="let t of keyList" (click)="clickKey(t.id)" type="button" class="btn {{ key === t.id ? 'btn-primary' : 'btn-outline-primary' }}">{{ t.name }}</button>
+	</div>
 
-<div class="btn-group" role="group">
-	<button *ngFor="let t of keyList" (click)="clickKey(t.id)" type="button" class="btn {{ key === t.id ? 'btn-primary' : 'btn-outline-primary' }}">{{ t.name }}</button>
-</div>
+	<div class="btn-group" role="group">
+		<button *ngFor="let t of shopList" (click)="clickShop(t.id, $event)" type="button" class="btn {{ selectShop.includes(t.id) ? 'btn-primary' : 'btn-outline-primary' }}">{{ t.name }}</button>
+	</div>
 
-<div class="btn-group" role="group">
-	<button *ngFor="let t of shopList" (click)="clickShop(t.id)" type="button" class="btn {{ selectShop.includes(t.id) ? 'btn-primary' : 'btn-outline-primary' }}">{{ t.name }}</button>
-</div>
-
-<button (click)="clickByBattle()" type="button" class="btn {{ byBattle ? 'btn-primary' : 'btn-outline-primary' }}">by battles</button>
-
+	<button (click)="clickByBattle()" type="button" class="btn {{ byBattle ? 'btn-primary' : 'btn-outline-primary' }}">sort by battles</button>
 </div>
 
 <div class="container">
-<table class="table">
-	<tr *ngFor="let t of li">
-		<td>{{ t.tier }}</td>
-		<td>{{ t.name }}</td>
-		<td class="num">{{ t.numShow }}</td>
-		<td class="num">{{ t.rank }}</td>
-		<td class="bar">
-			<div class="val" style="width: {{ t.numWidth }}"></div>
-			<div class="battle" style="width: {{ t.battleWidth }}"></div>
-		</td>
-	</tr>
-</table>
+	<p>除了排序规则，其他可按 ctrl + 左键复选</p>
+</div>
+
+<div class="container">
+	<table class="table">
+		<tr *ngFor="let t of li">
+			<td>{{ t.tier }}</td>
+			<td>{{ t.name }}</td>
+			<td class="num">{{ t.numShow }}</td>
+			<td class="num">{{ t.rank }}</td>
+			<td class="bar">
+				<div class="val" style="width: {{ t.numWidth }}"></div>
+				<div class="battle" style="width: {{ t.battleWidth }}"></div>
+			</td>
+		</tr>
+	</table>
 </div>
