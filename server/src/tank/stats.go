@@ -9,6 +9,8 @@ import (
 func Stats(raw *pb.TankRaw, date int) (tb *pb.TankStats, err error) {
 
 	tb = &pb.TankStats{
+		Frags:           raw.Frags,
+		Spotted:         raw.Spotted,
 		Xp:              raw.Xp,
 		SurvivedBattles: raw.SurvivedBattles,
 		Battles:         raw.Battles,

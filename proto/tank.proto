@@ -85,6 +85,8 @@ message TankBase {
 }
 
 message TankStats {
+	uint64 frags = 7;
+	uint64 spotted = 8;
 	uint64 xp = 9;
 	uint64 survived_battles = 10;
 	uint64 battles = 11;

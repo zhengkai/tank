@@ -6,3 +6,30 @@
 		padding-right: 1rem;
 	}
 }
+
+td.bar {
+	width: 300px;
+	div {
+		overflow: hidden;
+		display:block;
+		padding: 0;
+		line-height: 0;
+	}
+	div.val {
+		height: 1rem;
+		background-color: #39a;
+	}
+	div.battle {
+		margin-top: 2px;
+		margin-bottom: 0.5rem;
+		height: 4px;
+		background-color: red;
+	}
+}
+
+div.topbar {
+	> * {
+		margin-right: 1rem;
+		margin-bottom: 1rem;
+	}
+}

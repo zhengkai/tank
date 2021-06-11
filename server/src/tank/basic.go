@@ -13,8 +13,9 @@ func Basic(raw *pb.TankRaw) (tb *pb.TankBase, err error) {
 		Tier:   raw.TankTier,
 		Nation: getTankNation(raw.TankNation),
 		Type:   getTankType(raw.TankType),
-		Shop:   getTankShop(raw.TankStatus),
+		Shop:   getTankShop(raw.TankSort),
 	}
+
 	err = poolUpdate(tb)
 	return
 }
@@ -28,7 +29,7 @@ func getTankType(s string) (t pb.TankEnumType) {
 	case `heavyTank`:
 		t = pb.TankEnum_HT
 	case `lightTank`:
-		t = pb.TankEnum_HT
+		t = pb.TankEnum_LT
 	case `SPG`:
 		t = pb.TankEnum_SPG
 	}
@@ -66,7 +67,7 @@ func getTankNation(s string) (t pb.TankEnumNation) {
 
 func getTankShop(i uint32) (t pb.TankEnumShop) {
 	switch i {
-	case 1:
+	case 2:
 		t = pb.TankEnum_Gold
 	case 3:
 		t = pb.TankEnum_Premium

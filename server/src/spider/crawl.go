@@ -25,7 +25,7 @@ func crawlAll(simulate bool) (err error) {
 	var cnt int
 	var cntSum int
 
-	for lv := 10; lv >= 1; lv-- {
+	for lv := 10; lv >= 10; lv-- {
 		for _, higher := range []bool{false, true} {
 			for _, ty := range []int{0, 1, 2} {
 				cnt, err = Crawl(lv, higher, ty, simulate)

@@ -3,14 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { pb } from '../../pb';
 
-type allowedType = 'game'|'app';
-
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
 
-  urlGateway = '/assets/list.pb';
+  urlGateway = '/data/list.pb';
 
   constructor(
     private httpClient: HttpClient,

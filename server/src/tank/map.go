@@ -37,6 +37,6 @@ func poolUpdate(tb *pb.TankBase) (err error) {
 
 	mapBase[tb.ID] = tb
 	err = db.TankBase(tb)
-	zj.J(`update`, tb.ID, tb.Name, err)
+	zj.J(`update`, tb.ID, tb.Name, tb.Shop, err)
 	return
 }
