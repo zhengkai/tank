@@ -17,7 +17,9 @@ export class ApiService {
 
   async list(): Promise<pb.ITank[]> {
 
-    const post = this.httpClient.get(this.urlGateway, {
+	const uri = this.urlGateway + '?' + (new Date()).toISOString().substring(0, 10);
+
+    const post = this.httpClient.get(uri.replace(/-/g, ''), {
       observe: 'response',
       responseType: 'arraybuffer',
     }).toPromise();

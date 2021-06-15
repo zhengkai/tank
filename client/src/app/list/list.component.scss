@@ -35,23 +35,36 @@ td.rank {
 	width: 4rem;
 }
 
+$val-color: #39a;
+$battle-color: red;
+
 td.bar {
 	width: 400px;
 	div {
 		overflow: hidden;
-		display:block;
+		display: block;
 		padding: 0;
 		line-height: 0;
 	}
-	div.val {
-		height: 1rem;
-		background-color: #39a;
+	div.val-bg, div.battle-bg {
+		width: 100%;
 	}
-	div.battle {
+	div.val-bg {
+		background-color: lighten($val-color, 50%);
+	}
+	div.battle-bg {
+		height: 4px;
+		background-color: lighten($battle-color, 45%);
 		margin-top: 2px;
 		margin-bottom: 0.125rem;
+	}
+	div.val {
+		height: 1rem;
+		background-color: $val-color;
+	}
+	div.battle {
 		height: 4px;
-		background-color: red;
+		background-color: $battle-color;
 	}
 }
 

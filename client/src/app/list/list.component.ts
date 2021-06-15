@@ -30,7 +30,7 @@ export class ListComponent implements OnInit {
 
 	@ViewChild('xclip') xclip!: ElementRef;
 
-	lastCopy = '';
+	lastCopy = 'empty';
 	lastURI = '';
 
 	src: pb.ITank[] = [];
@@ -42,7 +42,7 @@ export class ListComponent implements OnInit {
 	byBattle = false;
 	higher = true;
 
-	tierList = [5, 6, 7, 8, 9, 10];
+	tierList = [3, 4, 5, 6, 7, 8, 9, 10];
 	typeList = [
 		{
 			id: pb.TankEnum.type.LT,
@@ -88,7 +88,7 @@ export class ListComponent implements OnInit {
 		},
 		{
 			id: 'survived',
-			name: '幸存率',
+			name: '幸存',
 		},
 	];
 	shopList = [
@@ -235,7 +235,6 @@ export class ListComponent implements OnInit {
 	}
 
 	loadSearch() {
-		console.log('search', window.location.search);
 
 		const us = new URLSearchParams(window.location.search);
 
@@ -382,6 +381,8 @@ export class ListComponent implements OnInit {
 			this.li.push(o);
 		});
 
+		this.sort(maxBattle, maxNum);
+
 		if (this.selectNation.length) {
 			this.totalNum = ` / ${this.li.length}`
 			this.li = this.li.filter((v: Row) => {
@@ -390,8 +391,6 @@ export class ListComponent implements OnInit {
 		} else {
 			this.totalNum = '';
 		}
-
-		this.sort(maxBattle, maxNum);
 	}
 
 	sort(maxBattle: number, maxNum: number): void {
