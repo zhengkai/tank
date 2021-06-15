@@ -5,6 +5,7 @@ import { pb } from '../../pb';
 interface Row {
 	id: number;
 	name: string;
+	type: number;
 	tier: number;
 	nation: number;
 	battle: number;
@@ -360,6 +361,7 @@ export class ListComponent implements OnInit {
 				name: v.base?.name || '',
 				tier,
 				nation: v.base?.nation || 0,
+				type: v.base?.type || 0,
 				battle: d.battles,
 				battleRate: 0,
 				battleWidth: '0',

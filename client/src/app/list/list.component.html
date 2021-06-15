@@ -9,7 +9,7 @@
 	</div>
 
 	<div class="btn-group" role="group">
-		<button *ngFor="let t of typeList" (click)="clickType(t.id, $event)" type="button" class="btn {{ selectType.includes(t.id) ? 'btn-primary' : 'btn-outline-primary' }}">{{ t.name }}</button>
+		<button *ngFor="let t of typeList" (click)="clickType(t.id, $event)" type="button" class="btn {{ selectType.includes(t.id) ? 'btn-primary' : 'btn-outline-primary' }}"><span class="type-icon ty-{{ t.id }}"></span> {{ t.name }}</button>
 	</div>
 
 	<div class="btn-group" role="group">
@@ -22,7 +22,7 @@
 
 	<button (click)="clickByBattle()" type="button" class="btn {{ byBattle ? 'btn-primary' : 'btn-outline-primary' }}">按出场排序</button>
 
-	<button (click)="clickHigher()" type="button" class="btn {{ higher ? 'btn-primary' : 'btn-outline-primary' }}">老车长</button>
+	<button (click)="clickHigher()" type="button" class="btn {{ higher ? 'btn-primary' : 'btn-outline-primary' }}" title="战斗力前 35% 的玩家">老车长</button>
 
 	<button *ngIf="li.length" (click)="copyURL()" type="button" class="btn {{ lastURI === lastCopy ? 'btn-success' : 'btn-outline-success' }}">复制地址</button>
 </div>
@@ -44,7 +44,7 @@
 		<tbody>
 			<tr *ngFor="let t of li">
 				<td class="num tier">{{ t.tier }}</td>
-				<td class="name">{{ t.name }}</td>
+				<td class="name">{{ t.name }} <span class="type-icon ty-{{ t.type }}"></span></td>
 				<td class="num key-num">{{ t.numShow }}</td>
 				<td class="num rank">{{ t.rank }}</td>
 				<td class="bar">
