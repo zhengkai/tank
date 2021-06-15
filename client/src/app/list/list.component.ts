@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { ApiService } from '../common/api.service';
 import { pb } from '../../pb';
 
@@ -27,6 +27,11 @@ function uniq(value: any, index: any, self: any) {
 	styleUrls: ['./list.component.scss']
 })
 export class ListComponent implements OnInit {
+
+	@ViewChild('xclip') xclip!: ElementRef;
+
+	lastCopy = '';
+	lastURI = '';
 
 	src: pb.ITank[] = [];
 	li: Row[] = [];
@@ -154,6 +159,7 @@ export class ListComponent implements OnInit {
 
 	constructor(
 		public api: ApiService,
+		private elementRef: ElementRef,
 	) {
 		this.loadSearch();
 	}
@@ -161,6 +167,18 @@ export class ListComponent implements OnInit {
 	async ngOnInit(): Promise<void> {
 		this.src = await this.api.list();
 		this.select();
+	}
+
+	copyURL() {
+
+		const search = this.buildURI();
+		this.lastCopy = search;
+
+		const el = this.xclip.nativeElement;
+		el.value = `https://${window.location.host}/${search}`;
+		el.select();
+		el.setSelectionRange(0, 99999);
+		document.execCommand('copy');
 	}
 
 	_click(arr: number[], el: number, multi = false) {
@@ -264,7 +282,7 @@ export class ListComponent implements OnInit {
 		this.higher = !us.get('higher');
 	}
 
-	buildURL() {
+	buildURI() {
 		const arg = [];
 
 		const tier = this.selectTier.sort((a, b) => a - b).join(',');
@@ -304,9 +322,8 @@ export class ListComponent implements OnInit {
 		if (arg.length) {
 			search = '?' + arg.join('&');
 		}
-		if (search !== window.location.search) {
-			window.history.pushState('', '', search);
-		}
+
+		return search;
 	}
 
 	select() {
@@ -315,7 +332,11 @@ export class ListComponent implements OnInit {
 		let maxBattle = 0;
 		let maxNum = 0;
 
-		this.buildURL();
+		const search = this.buildURI();
+		this.lastURI = search;
+		if (search !== window.location.search) {
+			window.history.pushState('', '', search);
+		}
 
 		this.src.forEach((v: pb.ITank) => {
 

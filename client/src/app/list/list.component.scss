@@ -8,8 +8,7 @@
 }
 
 td.tier {
-	width: 2rem;
-	text-align: right;
+	width: 3.5rem;
 }
 
 div.br-line {
@@ -30,6 +29,10 @@ td.key-num {
 
 td.name {
 	width: 183px;
+}
+
+td.rank {
+	width: 4rem;
 }
 
 td.bar {
@@ -57,4 +60,10 @@ div.topbar {
 		margin-right: 1rem;
 		margin-bottom: 1rem;
 	}
+}
+
+.xclip {
+	position: absolute;
+	top: -1000px;
+	left: -1000px;
 }

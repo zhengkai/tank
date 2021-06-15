@@ -23,6 +23,8 @@
 	<button (click)="clickByBattle()" type="button" class="btn {{ byBattle ? 'btn-primary' : 'btn-outline-primary' }}">按出场排序</button>
 
 	<button (click)="clickHigher()" type="button" class="btn {{ higher ? 'btn-primary' : 'btn-outline-primary' }}">老车长</button>
+
+	<button *ngIf="li.length" (click)="copyURL()" type="button" class="btn {{ lastURI === lastCopy ? 'btn-success' : 'btn-outline-success' }}">复制地址</button>
 </div>
 
 <div class="container-fluid br-line">
@@ -41,10 +43,10 @@
 	<table class="table table-hover" *ngIf="li.length">
 		<tbody>
 			<tr *ngFor="let t of li">
-				<td class="tier">{{ t.tier }}</td>
+				<td class="num tier">{{ t.tier }}</td>
 				<td class="name">{{ t.name }}</td>
 				<td class="num key-num">{{ t.numShow }}</td>
-				<td class="num">{{ t.rank }}</td>
+				<td class="num rank">{{ t.rank }}</td>
 				<td class="bar">
 					<div class="val" style="width: {{ t.numWidth }}"></div>
 					<div class="battle" style="width: {{ t.battleWidth }}"></div>
@@ -53,3 +55,5 @@
 		</tbody>
 	</table>
 </div>
+
+<input #xclip type="text" value="" class="xclip">
