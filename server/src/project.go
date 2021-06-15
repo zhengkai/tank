@@ -1,6 +1,7 @@
 package project
 
 import (
+	"project/cron"
 	"project/zj"
 )
 
@@ -18,6 +19,8 @@ func Dev() {
 func Prod() {
 
 	common()
+
+	go cron.Run()
 
 	zj.J(`prod start`)
 

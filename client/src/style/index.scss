@@ -8,3 +8,11 @@ td.num {
 	text-align: right;
 	font-family: var(--bs-font-monospace);
 }
+
+html, body {
+	height: 100%;
+}
+
+body {
+	overflow-y: scroll;
+}

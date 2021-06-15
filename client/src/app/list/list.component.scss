@@ -7,8 +7,33 @@
 	}
 }
 
+td.tier {
+	width: 2rem;
+	text-align: right;
+}
+
+div.br-line {
+	border-bottom: 1px solid silver;
+	margin-bottom: 1rem;
+	padding-bottom: 1rem;
+}
+
+div.no-result {
+	text-align: center;
+	padding-top: 3rem;
+	padding-bottom: 3rem;
+}
+
+td.key-num {
+	width: 90px;
+}
+
+td.name {
+	width: 183px;
+}
+
 td.bar {
-	width: 300px;
+	width: 400px;
 	div {
 		overflow: hidden;
 		display:block;
@@ -21,7 +46,7 @@ td.bar {
 	}
 	div.battle {
 		margin-top: 2px;
-		margin-bottom: 0.5rem;
+		margin-bottom: 0.125rem;
 		height: 4px;
 		background-color: red;
 	}

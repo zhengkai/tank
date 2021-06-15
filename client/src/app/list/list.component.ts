@@ -6,6 +6,7 @@ interface Row {
 	id: number;
 	name: string;
 	tier: number;
+	nation: number;
 	battle: number;
 	battleRate: number;
 	battleWidth: string;
@@ -14,6 +15,10 @@ interface Row {
 	rate: number;
 	numWidth: string;
 	rank: number;
+}
+
+function uniq(value: any, index: any, self: any) {
+	return self.indexOf(value) === index;
 }
 
 @Component({
@@ -25,13 +30,12 @@ export class ListComponent implements OnInit {
 
 	src: pb.ITank[] = [];
 	li: Row[] = [];
-
-	higher = true;
+	totalNum = '';
 
 	idx = 1;
-	key = 'dmg';
-
+	key = '';
 	byBattle = false;
+	higher = true;
 
 	tierList = [5, 6, 7, 8, 9, 10];
 	typeList = [
@@ -59,7 +63,7 @@ export class ListComponent implements OnInit {
 	keyList = [
 		{
 			id: 'dmg',
-			name: '场均伤害',
+			name: '伤害',
 		},
 		{
 			id: 'win',
@@ -67,15 +71,15 @@ export class ListComponent implements OnInit {
 		},
 		{
 			id: 'xp',
-			name: '场均经验',
+			name: '经验',
 		},
 		{
 			id: 'frag',
-			name: '场均击毁',
+			name: '击毁',
 		},
 		{
 			id: 'spot',
-			name: '场均点亮',
+			name: '点亮',
 		},
 		{
 			id: 'survived',
@@ -96,62 +100,96 @@ export class ListComponent implements OnInit {
 			name: '特种车',
 		},
 	];
-
-	selectTier = [10];
-	selectType = [
-		pb.TankEnum.type.HT,
+	nationList = [
+		{
+			id: pb.TankEnum.nation.C,
+			name: '中',
+		},
+		{
+			id: pb.TankEnum.nation.S,
+			name: '苏',
+		},
+		{
+			id: pb.TankEnum.nation.M,
+			name: '美',
+		},
+		{
+			id: pb.TankEnum.nation.D,
+			name: '德',
+		},
+		{
+			id: pb.TankEnum.nation.Y,
+			name: '英',
+		},
+		{
+			id: pb.TankEnum.nation.F,
+			name: '法',
+		},
+		{
+			id: pb.TankEnum.nation.I,
+			name: '意',
+		},
+		{
+			id: pb.TankEnum.nation.V,
+			name: '瑞',
+		},
+		{
+			id: pb.TankEnum.nation.B,
+			name: '波',
+		},
+		{
+			id: pb.TankEnum.nation.J,
+			name: '捷',
+		},
+		{
+			id: pb.TankEnum.nation.R,
+			name: '倭',
+		},
 	];
-	selectShop: pb.TankEnum.shop[] = [];
+
+	selectTier: number[] = [];
+	selectType: number[] = [];
+	selectNation: number[] = [];
+	selectShop: number[] = [];
 
 	constructor(
 		public api: ApiService,
 	) {
+		this.loadSearch();
 	}
 
-	clickTier(i: number, ev: MouseEvent) {
-
-		const idx = this.selectTier.indexOf(i);
-		if (idx == -1) {
-			if (!ev.ctrlKey) {
-				this.selectTier.length = 0;
-			}
-			this.selectTier.push(i);
-		} else {
-			this.selectTier.splice(idx, 1);
-		}
-		console.log('selectTier', this.selectTier);
-
+	async ngOnInit(): Promise<void> {
+		this.src = await this.api.list();
 		this.select();
+	}
+
+	_click(arr: number[], el: number, multi = false) {
+		const idx = arr.indexOf(el);
+		if (idx == -1) {
+			if (!multi) {
+				arr.length = 0;
+			}
+			arr.push(el);
+		} else {
+			arr.splice(idx, 1);
+		}
+		this.select();
+	}
+
+	clickTier(id: number, ev: MouseEvent) {
+		this._click(this.selectTier, id, ev.ctrlKey);
 	}
 
 	clickShop(id: any, ev: MouseEvent) {
-		const idx = this.selectShop.indexOf(id);
-		if (idx == -1) {
-			if (!ev.ctrlKey) {
-				this.selectShop.length = 0;
-			}
-			this.selectShop.push(id);
-		} else {
-			this.selectShop.splice(idx, 1);
-		}
-		console.log(this.selectShop);
-
-		this.select();
+		this._click(this.selectShop, id, ev.ctrlKey);
 	}
 
-	clickType(t: any, ev: MouseEvent) {
-		const ty = t.id;
-		const idx = this.selectType.indexOf(ty);
-		if (idx == -1) {
-			if (!ev.ctrlKey) {
-				this.selectType.length = 0;
-			}
-			this.selectType.push(ty);
-		} else {
-			this.selectType.splice(idx, 1);
-		}
+	clickType(id: number, ev: MouseEvent) {
+		this._click(this.selectType, id, ev.ctrlKey);
+	}
 
-		this.select();
+	clickNation(t: any, ev: MouseEvent) {
+		this._click(this.selectNation, t, ev.ctrlKey);
 	}
 
 	clickByBattle() {
@@ -159,15 +197,116 @@ export class ListComponent implements OnInit {
 		this.select();
 	}
 
-	clickKey(t: string) {
-		this.key = t;
-
+	clickHigher() {
+		this.higher = !this.higher;
 		this.select();
 	}
 
-	async ngOnInit(): Promise<void> {
-		this.src = await this.api.list();
+	clickKey(t: string) {
+		this.key = t;
 		this.select();
+	}
+
+	clickReset() {
+		this.selectShop.length = 0;
+		this.selectTier.length = 0;
+		this.selectType.length = 0;
+		this.selectNation.length = 0;
+		this.higher = true;
+		this.select();
+	}
+
+	loadSearch() {
+		console.log('search', window.location.search);
+
+		const us = new URLSearchParams(window.location.search);
+
+		this.selectTier.length = 0;
+		us.get('tier')?.split(',').filter(uniq).forEach((a) => {
+			const i = parseInt(a);
+			if (this.tierList.includes(i)) {
+				this.selectTier.push(i);
+			}
+		});
+
+		this.selectType.length = 0;
+		us.get('type')?.split(',').filter(uniq).forEach((a) => {
+			const i = parseInt(a);
+			for (const row of this.typeList) {
+				if (row.id === i) {
+					this.selectType.push(i);
+					break;
+				}
+			}
+		});
+
+		this.selectShop.length = 0;
+		us.get('shop')?.split(',').filter(uniq).forEach((a) => {
+			const i = parseInt(a);
+			for (const row of this.shopList) {
+				if (row.id === i) {
+					this.selectShop.push(i);
+					break;
+				}
+			}
+		});
+
+		this.key = this.keyList[0].id;
+		const key = us.get('key');
+		for (const row of this.keyList) {
+			if (key === row.id) {
+				this.key = key;
+				break;
+			}
+		}
+
+		this.byBattle = !!us.get('battle');
+		this.higher = !us.get('higher');
+	}
+
+	buildURL() {
+		const arg = [];
+
+		const tier = this.selectTier.sort((a, b) => a - b).join(',');
+		if (tier?.length) {
+			arg.push('tier=' + tier);
+		}
+
+		const ty = this.selectType.sort((a, b) => a - b).join(',');
+		if (ty?.length) {
+			arg.push('type=' + ty);
+		}
+
+		const shop = this.selectShop.sort((a, b) => a - b).join(',');
+		if (shop?.length) {
+			arg.push('shop=' + shop);
+		}
+
+		const nation = this.selectNation.sort((a, b) => a - b).join(',');
+		if (nation?.length) {
+			arg.push('nation=' + nation);
+		}
+		console.log('nation', nation);
+
+		if (this.key != this.keyList[0].id) {
+			arg.push('key=' + this.key);
+		}
+
+		if (this.byBattle) {
+			arg.push('battle=1');
+		}
+
+		if (!this.higher) {
+			arg.push('higher=0');
+		}
+
+		let search = '';
+		if (arg.length) {
+			search = '?' + arg.join('&');
+		}
+		if (search !== window.location.search) {
+			window.history.pushState('', '', search);
+		}
 	}
 
 	select() {
@@ -176,9 +315,11 @@ export class ListComponent implements OnInit {
 		let maxBattle = 0;
 		let maxNum = 0;
 
+		this.buildURL();
+
 		this.src.forEach((v: pb.ITank) => {
 
-			const d = this.higher ? v?.stats : v?.statsHigher;
+			const d = this.higher ? v?.statsHigher : v?.stats;
 			if (!d?.battles) {
 				return;
 			}
@@ -198,6 +339,7 @@ export class ListComponent implements OnInit {
 				id: v.base?.ID || 0,
 				name: v.base?.name || '',
 				tier,
+				nation: v.base?.nation || 0,
 				battle: d.battles,
 				battleRate: 0,
 				battleWidth: '0',
@@ -218,6 +360,16 @@ export class ListComponent implements OnInit {
 
 			this.li.push(o);
 		});
+
+		if (this.selectNation.length) {
+			this.totalNum = ` / ${this.li.length}`
+			this.li = this.li.filter((v: Row) => {
+				return this.selectNation.includes(v.nation);
+			});
+		} else {
+			this.totalNum = '';
+		}
+
 		this.sort(maxBattle, maxNum);
 	}
 
