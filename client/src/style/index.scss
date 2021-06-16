@@ -18,4 +18,10 @@ body {
 	overflow-y: scroll;
 }
 
+img.flag {
+	width: 29px;
+	height: 18px;
+	margin-right: 0.5rem;
+}
+
 @import "./icon.scss";

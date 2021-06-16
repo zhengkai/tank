@@ -31,17 +31,6 @@ div.no-result {
 	padding-bottom: 3rem;
 }
 
-img.flag {
-	width: 29px;
-	height: 18px;
-}
-
-button.flag {
-	img {
-		margin-right: 0.5rem;
-	}
-}
-
 td.key-num {
 	width: 90px;
 }
@@ -53,9 +42,6 @@ td.name {
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		margin: 0;
-		img.flag {
-			margin-right: 0.5rem;
-		}
 	}
 }
 

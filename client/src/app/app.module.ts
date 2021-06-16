@@ -5,11 +5,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './common/routing.module';
 import { BootstrapComponent } from './common/bootstrap.component';
 import { ListComponent } from './list/list.component';
+import { MatrixComponent } from './matrix/matrix.component';
 
 @NgModule({
 	declarations: [
 		BootstrapComponent,
   ListComponent,
+  MatrixComponent,
 	],
 	imports: [
 		BrowserModule,

@@ -1,0 +1,13 @@
+<div class="container">
+	<div class="row">
+		<div id="matrix" class="col"></div>
+		<div class="col">
+			<div class="name">
+				<p *ngIf="tank?.tier">
+					<span class="type-icon ty-{{ tank.type }}"></span>
+					<img class="flag" src="/assets/flag/{{ tank.nation }}.png">{{ tank.name }}
+				</p>
+			</div>
+		<div>
+	</div>
+</div>
