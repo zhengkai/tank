@@ -1,4 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { formatNumber } from '@angular/common';
 import { ApiService } from '../common/api.service';
 import { pb } from '../../pb';
 
@@ -202,7 +203,7 @@ export class ListComponent implements OnInit {
 		this._click(this.selectTier, id, ev.ctrlKey);
 	}
 
-	clickShop(id: any, ev: MouseEvent) {
+	clickShop(id: number, ev: MouseEvent) {
 		this._click(this.selectShop, id, ev.ctrlKey);
 	}
 
@@ -210,7 +211,7 @@ export class ListComponent implements OnInit {
 		this._click(this.selectType, id, ev.ctrlKey);
 	}
 
-	clickNation(t: any, ev: MouseEvent) {
+	clickNation(t: number, ev: MouseEvent) {
 		this._click(this.selectNation, t, ev.ctrlKey);
 	}
 
@@ -443,7 +444,7 @@ export class ListComponent implements OnInit {
 		case 'dmg':
 			num = s?.damageDealt || 0;
 			r.num = num / b;
-			r.numShow = '' + Math.round(r.num);
+			r.numShow = '' + formatNumber(Math.round(r.num), 'en-US');
 			break;
 
 		case 'win':
@@ -455,7 +456,7 @@ export class ListComponent implements OnInit {
 		case 'xp':
 			num = s?.xp || 0;
 			r.num = num / b;
-			r.numShow = '' + Math.round(r.num);
+			r.numShow = '' + formatNumber(Math.round(r.num), 'en-US');
 			break;
 
 		case 'frag':
