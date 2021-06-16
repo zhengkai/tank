@@ -7,6 +7,10 @@
 	}
 }
 
+button {
+	user-select: none;
+}
+
 td.tier {
 	width: 3.5rem;
 }
@@ -28,7 +32,13 @@ td.key-num {
 }
 
 td.name {
-	width: 202px;
+	p {
+		width: 10rem;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		margin: 0;
+	}
 }
 
 td.rank {

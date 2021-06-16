@@ -31,6 +31,8 @@ export class ListComponent implements OnInit {
 
 	@ViewChild('xclip') xclip!: ElementRef;
 
+	init = false;
+
 	lastCopy = 'empty';
 	lastURI = '';
 
@@ -167,6 +169,7 @@ export class ListComponent implements OnInit {
 
 	async ngOnInit(): Promise<void> {
 		this.src = await this.api.list();
+		this.init = true;
 		this.select();
 	}
 
