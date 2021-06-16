@@ -1,7 +1,9 @@
-<div class="container-fluid">
+<div class="container-fluid" *ngIf="prod">
 	<div class="container">
 		<p class="lead">坦克世界 国服 车辆数据排行</p>
 	</div>
 </div>
+
+<br *ngIf="!prod">
 
 <router-outlet></router-outlet>
