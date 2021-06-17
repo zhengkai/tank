@@ -4,6 +4,7 @@
 		<div class="col">
 			<div class="name">
 				<p *ngIf="tank?.tier">
+					{{ tank?.tier }}
 					<span class="type-icon ty-{{ tank.type }}"></span>
 					<img class="flag" src="/assets/flag/{{ tank.nation }}.png">{{ tank.name }}
 				</p>

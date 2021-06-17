@@ -1,7 +1,8 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { formatNumber } from '@angular/common';
-import { ApiService } from '../common/api.service';
+import { ApiService, TankMap } from '../common/api.service';
 import { pb } from '../../pb';
+import { MatrixComponent, Data } from '../matrix/matrix.component';
 
 interface Row {
 	id: number;
@@ -37,14 +38,30 @@ export class ListComponent implements OnInit {
 	lastCopy = 'empty';
 	lastURI = '';
 
+	srcMap: TankMap = {};
 	src: pb.ITank[] = [];
 	li: Row[] = [];
 	totalNum = '';
 
+	matrixData: Data[] = [];
+
 	idx = 1;
 	key = '';
+	yKey = '';
 	byBattle = false;
 	higher = true;
+
+	tableType = 'table';
+	tableList = [
+		{
+			id: 'table',
+			name: '列表',
+		},
+		{
+			id: 'matrix',
+			name: '散点图',
+		},
+	];
 
 	tierList = [3, 4, 5, 6, 7, 8, 9, 10];
 	typeList = [
@@ -93,6 +110,12 @@ export class ListComponent implements OnInit {
 		{
 			id: 'survived',
 			name: '幸存',
+		},
+	];
+	yKeyList = [
+		{
+			id: 'battle',
+			name: '出场',
 		},
 	];
 	shopList = [
@@ -165,11 +188,13 @@ export class ListComponent implements OnInit {
 		public api: ApiService,
 		private elementRef: ElementRef,
 	) {
+		this.yKeyList.push(...this.keyList);
 		this.loadSearch();
 	}
 
 	async ngOnInit(): Promise<void> {
-		this.src = await this.api.list();
+		this.srcMap = await this.api.data();
+		this.src = Object.values(this.srcMap);
 		this.init = true;
 		this.select();
 	}
@@ -197,6 +222,11 @@ export class ListComponent implements OnInit {
 			arr.splice(idx, 1);
 		}
 		this.select();
+	}
+
+	clickTable(key: string) {
+		this.tableType = key;
+		this.updateURI();
 	}
 
 	clickTier(id: number, ev: MouseEvent) {
@@ -230,6 +260,11 @@ export class ListComponent implements OnInit {
 		this.select();
 	}
 
+	clickYKey(t: string) {
+		this.yKey = t;
+		this.select();
+	}
+
 	clickReset() {
 		this.selectShop.length = 0;
 		this.selectTier.length = 0;
@@ -244,7 +279,7 @@ export class ListComponent implements OnInit {
 		const us = new URLSearchParams(window.location.search);
 
 		this.selectTier.length = 0;
-		us.get('tier')?.split(',').filter(uniq).forEach((a) => {
+		(us.get('tier') || us.get('lv'))?.split(',').filter(uniq).forEach((a) => {
 			const i = parseInt(a);
 			if (this.tierList.includes(i)) {
 				this.selectTier.push(i);
@@ -252,7 +287,7 @@ export class ListComponent implements OnInit {
 		});
 
 		this.selectType.length = 0;
-		us.get('type')?.split(',').filter(uniq).forEach((a) => {
+		(us.get('type') || us.get('t'))?.split(',').filter(uniq).forEach((a) => {
 			const i = parseInt(a);
 			for (const row of this.typeList) {
 				if (row.id === i) {
@@ -262,8 +297,19 @@ export class ListComponent implements OnInit {
 			}
 		});
 
+		this.selectNation.length = 0;
+		us.get('n')?.split(',').filter(uniq).forEach((a) => {
+			const i = parseInt(a);
+			for (const row of this.nationList) {
+				if (row.id === i) {
+					this.selectNation.push(i);
+					break;
+				}
+			}
+		});
+
 		this.selectShop.length = 0;
-		us.get('shop')?.split(',').filter(uniq).forEach((a) => {
+		(us.get('shop') || us.get('s'))?.split(',').filter(uniq).forEach((a) => {
 			const i = parseInt(a);
 			for (const row of this.shopList) {
 				if (row.id === i) {
@@ -274,7 +320,7 @@ export class ListComponent implements OnInit {
 		});
 
 		this.key = this.keyList[0].id;
-		const key = us.get('key');
+		const key = us.get('key') || us.get('k');
 		for (const row of this.keyList) {
 			if (key === row.id) {
 				this.key = key;
@@ -282,8 +328,28 @@ export class ListComponent implements OnInit {
 			}
 		}
 
-		this.byBattle = !!us.get('battle');
-		this.higher = !us.get('higher');
+		this.yKey = 'win';
+		if (this.key === 'win') {
+			this.yKey = 'battle';
+		}
+		const ykey = us.get('y');
+		for (const row of this.yKeyList) {
+			if (ykey === row.id) {
+				this.yKey = ykey;
+				break;
+			}
+		}
+
+		const tb = us.get('tb');
+		for (const row of this.tableList) {
+			if (tb === row.id) {
+				this.tableType = tb;
+				break;
+			}
+		}
+
+		this.byBattle = !!(us.get('battle') || us.get('b'));
+		this.higher = !(us.get('higher') || us.get('h'));
 	}
 
 	buildURI() {
@@ -291,35 +357,48 @@ export class ListComponent implements OnInit {
 
 		const tier = this.selectTier.sort((a, b) => a - b).join(',');
 		if (tier?.length) {
-			arg.push('tier=' + tier);
+			arg.push('lv=' + tier);
 		}
 
 		const ty = this.selectType.sort((a, b) => a - b).join(',');
 		if (ty?.length) {
-			arg.push('type=' + ty);
+			arg.push('t=' + ty);
 		}
 
 		const shop = this.selectShop.sort((a, b) => a - b).join(',');
 		if (shop?.length) {
-			arg.push('shop=' + shop);
+			arg.push('s=' + shop);
 		}
 
 		const nation = this.selectNation.sort((a, b) => a - b).join(',');
 		if (nation?.length) {
-			arg.push('nation=' + nation);
+			arg.push('n=' + nation);
 		}
-		console.log('nation', nation);
 
 		if (this.key != this.keyList[0].id) {
-			arg.push('key=' + this.key);
+			arg.push('k=' + this.key);
+		}
+
+		if (this.key !== 'win') {
+			if (this.yKey !== 'win') {
+				arg.push('y=' + this.yKey);
+			}
+		} else {
+			if (this.yKey !== 'battle') {
+				arg.push('y=' + this.yKey);
+			}
+		}
+
+		if (this.tableType !== 'table') {
+			arg.push('tb=' + this.tableType);
 		}
 
 		if (this.byBattle) {
-			arg.push('battle=1');
+			arg.push('b=1');
 		}
 
 		if (!this.higher) {
-			arg.push('higher=0');
+			arg.push('h=0');
 		}
 
 		let search = '';
@@ -330,17 +409,21 @@ export class ListComponent implements OnInit {
 		return search;
 	}
 
+	updateURI() {
+		const search = this.buildURI();
+		this.lastURI = search;
+		if (search !== window.location.search) {
+			window.history.pushState('', '', search);
+		}
+	}
+
 	select() {
 		this.li.length = 0;
 
 		let maxBattle = 0;
 		let maxNum = 0;
 
-		const search = this.buildURI();
-		this.lastURI = search;
-		if (search !== window.location.search) {
-			window.history.pushState('', '', search);
-		}
+		this.updateURI();
 
 		this.src.forEach((v: pb.ITank) => {
 
@@ -397,6 +480,76 @@ export class ListComponent implements OnInit {
 		} else {
 			this.totalNum = '';
 		}
+
+		if (this.li.length) {
+			this.matrix();
+		}
+	}
+
+	matrix() {
+
+		if (this.key === this.yKey) {
+			if (this.key === 'win') {
+				this.yKey = 'battle';
+			} else {
+				this.yKey = 'win';
+			}
+		}
+
+		this.matrixData = this.li.map((v) => {
+			return {
+				nx: this.matrixAxis(this.yKey, v.id),
+				ny: this.matrixAxis(this.key, v.id),
+				type: v.type,
+				id: v.id,
+				x: 0,
+				y: 0,
+			} as Data;
+		});
+	}
+
+	matrixAxis(key: string, id: number): number {
+
+		const t = this.srcMap[id];
+		if (!t) {
+			return 0;
+		}
+
+		const st = this.higher ? t.statsHigher : t.stats;
+		if (!st) {
+			return 0;
+		}
+
+		const battle = st.battles;
+		if (!battle) {
+			return 0;
+		}
+
+		switch (key) {
+
+		case 'battle':
+			return battle;
+
+		case 'dmg':
+			return (st.damageDealt || 0) / battle;
+
+		case 'win':
+			return (st.wins || 0) / battle;
+
+		case 'xp':
+			return (st.xp || 0) / battle;
+
+		case 'frag':
+			return (st.frags || 0) / battle;
+
+		case 'spot':
+			return (st.spotted || 0) / battle;
+
+		case 'survived':
+			return (st.survivedBattles || 0) / battle;
+		}
+
+		return 0;
 	}
 
 	sort(maxBattle: number, maxNum: number): void {

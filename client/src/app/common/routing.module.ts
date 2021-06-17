@@ -5,7 +5,6 @@ import { MatrixComponent } from '../matrix/matrix.component';
 
 const routes: Routes = [
 	{ path: '', component: ListComponent },
-	{ path: 'matrix', component: MatrixComponent },
 	{ path: '**', redirectTo: '/' },
 ];
 

@@ -3,36 +3,72 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { pb } from '../../pb';
 
+export type TankMap = { [key: number]: pb.ITank }
+
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class ApiService {
 
-  urlGateway = '/data/list.pb';
+	srcDone = false;
+	src: TankMap = {};
 
-  constructor(
-    private httpClient: HttpClient,
-  ) {
-  }
+	cbList: (() => void)[] = [];
 
-  async list(): Promise<pb.ITank[]> {
+	urlGateway = '/data/list.pb';
 
-	const uri = this.urlGateway + '?' + (new Date()).toISOString().substring(0, 10);
+	constructor(
+		private httpClient: HttpClient,
+	) {
 
-    const post = this.httpClient.get(uri.replace(/-/g, ''), {
-      observe: 'response',
-      responseType: 'arraybuffer',
-    }).toPromise();
-    const res = await post;
+		console.log('writen by zhengkai https://soulogic.com');
 
-    let rsp: pb.TankList;
-    if (res.status !== 200 || !res.body) {
-		return [];
-    }
+		(async () => {
+			await this.list();
+			this.cbList.forEach(v => {
+				v();
+			});
+			this.cbList.length = 0;
+			this.srcDone = true;
+		})();
+	}
 
-    const re = new Uint8Array(res.body);
-    rsp = pb.TankList.decode(re);
+	async data(): Promise<TankMap> {
 
-    return rsp?.list || [];
-  }
+		if (this.srcDone) {
+			return this.src;
+		}
+
+		return new Promise((resolve, reject) => {
+			this.cbList.push(() => {
+				resolve(this.src);
+			});
+		});
+	}
+
+	async list(): Promise<void> {
+
+		const uri = this.urlGateway + '?' + (new Date()).toISOString().substring(0, 10);
+
+		const post = this.httpClient.get(uri.replace(/-/g, ''), {
+			observe: 'response',
+			responseType: 'arraybuffer',
+		}).toPromise();
+		const res = await post;
+
+		let rsp: pb.TankList;
+		if (res.status !== 200 || !res.body) {
+			return;
+		}
+
+		const re = new Uint8Array(res.body);
+		rsp = pb.TankList.decode(re);
+
+		rsp?.list?.forEach(v => {
+			const id = v?.base?.ID || 0;
+			if (id) {
+				this.src[id] = v;
+			}
+		});
+	}
 }

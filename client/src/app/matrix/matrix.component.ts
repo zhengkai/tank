@@ -1,104 +1,139 @@
-import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../common/api.service';
+import { Component, OnInit, OnChanges, Input } from '@angular/core';
+import { ApiService, TankMap  } from '../common/api.service';
 import { pb } from '../../pb';
 import * as d3 from 'd3';
+
+export interface Data {
+	nx: number;
+	ny: number;
+	type: number;
+	id: number;
+	x: number;
+	y: number;
+}
 
 @Component({
 	selector: 'app-matrix',
 	templateUrl: './matrix.component.html',
 	styleUrls: ['./matrix.component.scss']
 })
-export class MatrixComponent implements OnInit {
+export class MatrixComponent implements OnChanges {
+
+	@Input() list: Data[] = [];
+
+	size = 700;
+	border = 50;
 
 	src: pb.ITank[] = [];
+	srcMap: TankMap = {};
 
 	tank: any = {};
+
+	svg: d3.Selection<SVGSVGElement, any, any, any>|null = null;
 
 	constructor(
 		public api: ApiService,
 	) {
+		(async () => {
+			this.srcMap = await api.data();
+		})();
 	}
 
-	async ngOnInit(): Promise<void> {
-		this.src = await this.api.list();
-		this.draw();
-	}
-
-	draw() {
-
-		const size = 700;
-		const border = 50;
+	drawInit() {
+		if (this.svg) {
+			return;
+		}
 
 		const svg = d3.select('#matrix').append('svg');
+		this.svg = svg;
 
-		const list = this.src.map(v => {
+		this.svg.attr('height', this.size + this.border * 3)
+		.attr('width', this.size + this.border * 2);
+	}
+
+	ngOnChanges() {
+		this.drawInit();
+		this.draw(this.list);
+	}
+
+	demo() {
+		const list: Data[] = [];
+		this.src.map(v => {
 			const st = v?.statsHigher;
-			if ((v?.base?.tier || 0) < 9 || v?.base?.type === 0 ||  !st?.battles || !st.damageDealt || !st.wins) {
-				return {
-					base: {},
-					dmg: 0,
-					win: 0,
-					ty: 0,
-				}
+			if (v?.base?.tier !== 10 && v?.base?.tier !== 9) {
+				return;
 			}
-			return {
-				base: v?.base || {},
-				dmg: st.damageDealt / st.battles,
-				win: st.wins / st.battles,
-				ty: v?.base?.type || 0,
+			if (v?.base?.shop === 2 || !v?.base?.ID || !st?.battles || !st.damageDealt || !st.wins || !st.survivedBattles) {
+				return
 			}
-		}).filter(v => !!v.dmg);
+			list.push({
+				nx: st.wins / st.battles,
+				ny: st.damageDealt / st.battles,
+				type: v?.base?.type || 0,
+				id: v.base.ID,
+				x: 0,
+				y: 0,
+			})
+		});
 
-		const winList = list.map(v => v.win);
-		const dmgList = list.map(v => v.dmg);
+		this.draw(list);
+	}
 
-		const winMin = Math.min(...winList);
-		const winMax = Math.max(...winList);
-		const winRange = winMax - winMin;
+	draw(list: Data[]) {
 
-		const dmgMin = Math.min(...dmgList);
-		const dmgMax = Math.max(...dmgList);
-		const dmgRange = dmgMax - dmgMin;
+		const svg = this.svg;
+		if (!svg) {
+			return;
+		}
 
-		console.log([winMin, winMin + winRange]);
+		const xList = list.map(v => v.nx);
+		const yList = list.map(v => v.ny);
 
-		const radius = 10;
+		const xMin = Math.min(...xList);
+		const xMax = Math.max(...xList);
+		const xRange = xMax - xMin;
+
+		const yMin = Math.min(...yList);
+		const yMax = Math.max(...yList);
+		const yRange = yMax - yMin;
+
+		list.forEach(v => {
+			v.x =  this.border + (v.nx - xMin) / xRange * this.size;
+			v.y =  this.border + (yMax - v.ny) / yRange * this.size;
+		});
+
+		const radius = 6;
 
 		const self = this;
 
-		svg.attr('height', size + border * 3)
-			.attr('width', size + border * 2)
-			// .style('background-color', '#eee')
+		svg.selectAll('*').remove();
 
 		svg.selectAll('circle')
-			.data(list)
-			.enter()
-			.append('svg:circle')
-			.attr('cx', (v) => {
-				return border + (v.win - winMin) / winRange * size;
-			})
-			.attr('cy', (v) => {
-				return border + (dmgMax - v.dmg) / dmgRange * size;
-			})
-			.attr('r', radius)
-			.attr('fill', v => d3.schemeCategory10[v.ty])
-            .on("mouseover", function (v, tank) {
-            	d3.select(this).attr('r', radius * 2);
-				self.tank = tank.base;
-			})
-            .on("mouseout", function (v, tank) {
-            	d3.select(this).attr('r', radius);
-				self.tank = {};
-			})
+		.data(list)
+		.enter()
+		.append('svg:circle')
+		.attr('cx', v => v.x)
+		.attr('cy', v => v.y)
+		.attr('r', radius)
+		.attr('fill', v => d3.schemeCategory10[v.type])
+		.on("mouseover", function (v, tank) {
+			d3.select(this).attr('r', radius * 2);
+			const t = self.srcMap[tank.id]
+			if (t?.base) {
+				self.tank = t.base;
+			}
+		})
+		.on("mouseout", function (v, tank) {
+			d3.select(this).attr('r', radius);
+			// self.tank = {};
+		})
 
-		const x = d3.scaleLinear().range([border, border + size]).domain([winMin, winMax])
+		const x = d3.scaleLinear().range([this.border, this.border + this.size]).domain([xMin, xMax])
 		const ax = d3.axisBottom(x).ticks(12);
 		svg.append('g').call(ax)
 
-		const y = d3.scaleLinear().range([border, border + size]).domain([dmgMax, dmgMin])
+		const y = d3.scaleLinear().range([this.border, this.border + this.size]).domain([yMax, yMin])
 		const ay = d3.axisRight(y).ticks(12);
 		svg.append('g').call(ay);
-
-		console.log(svg);
 	}
 }

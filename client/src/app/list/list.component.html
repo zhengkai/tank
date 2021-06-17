@@ -37,11 +37,29 @@
 	<input #xclip type="text" value="" class="xclip">
 </div>
 
+<div class="container-fluid">
+	<div class="container table-bar">
+		<div class="row">
+			<div class="col-auto">
+				<div class="btn-group" role="group">
+					<button [disabled]="!init || null" *ngFor="let t of tableList" (click)="clickTable(t.id)" type="button" class="btn {{ tableType === t.id ? 'btn-primary' : 'btn-outline-primary' }}">{{ t.name }}</button>
+				</div>
+			</div>
+			<div class="col-auto" *ngIf="tableType === 'matrix'">
+				横轴：
+				<div class="btn-group" role="group">
+					<button [disabled]="(!init || t.id === key) || null" *ngFor="let t of yKeyList" (click)="clickYKey(t.id)" type="button" class="btn {{ t.id === key ? 'btn-outline-secondary' : (yKey === t.id ? 'btn-primary' : 'btn-outline-primary') }}">{{ t.name }}</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="container list-table">
 	<div class="no-result" *ngIf="!li.length && init">
 		<p>查无结果，请换个过滤条件，或者 <button class="btn btn-danger" (click)="clickReset()">重置条件</button> </p>
 	</div>
-	<table class="table table-hover" *ngIf="li.length">
+	<table class="table table-hover" *ngIf="li.length" [style.display]="tableType === 'table' ? 'block' : 'none'">
 		<tbody>
 			<tr *ngFor="let t of li">
 				<td class="num tier">{{ t.tier }}</td>
@@ -59,4 +77,5 @@
 			</tr>
 		</tbody>
 	</table>
+	<app-matrix *ngIf="li.length"  [style.display]="tableType === 'matrix' ? 'block' : 'none'" [list]="matrixData"></app-matrix>
 </div>
