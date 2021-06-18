@@ -1,5 +1,5 @@
-import { Component, OnInit, OnChanges, Input } from '@angular/core';
-import { ApiService, TankMap  } from '../common/api.service';
+import { Component, OnChanges, Input, ElementRef, ViewChild } from '@angular/core';
+import { ApiService, TankMap } from '../common/api.service';
 import { pb } from '../../pb';
 import * as d3 from 'd3';
 
@@ -21,8 +21,14 @@ export class MatrixComponent implements OnChanges {
 
 	@Input() list: Data[] = [];
 
+	@ViewChild('box') box!: ElementRef;
+
+	ready = false;
+	lastDot: any = null;
+
 	size = 700;
 	border = 50;
+	radius = 6;
 
 	src: pb.ITank[] = [];
 	srcMap: TankMap = {};
@@ -39,12 +45,24 @@ export class MatrixComponent implements OnChanges {
 		})();
 	}
 
+	ngAfterViewInit() {
+		if (this.ready) {
+			return;
+		}
+		this.ready = true;
+		this.ngOnChanges();
+	}
+
 	drawInit() {
 		if (this.svg) {
 			return;
 		}
+		if (!this.box) {
+			return;
+		}
+		this.ready = true;
 
-		const svg = d3.select('#matrix').append('svg');
+		const svg = d3.select(this.box.nativeElement).append('svg');
 		this.svg = svg;
 
 		this.svg.attr('height', this.size + this.border * 3)
@@ -52,34 +70,27 @@ export class MatrixComponent implements OnChanges {
 	}
 
 	ngOnChanges() {
+		if (!this.list.length) {
+			return;
+		}
 		this.drawInit();
 		this.draw(this.list);
 	}
 
-	demo() {
-		const list: Data[] = [];
-		this.src.map(v => {
-			const st = v?.statsHigher;
-			if (v?.base?.tier !== 10 && v?.base?.tier !== 9) {
-				return;
-			}
-			if (v?.base?.shop === 2 || !v?.base?.ID || !st?.battles || !st.damageDealt || !st.wins || !st.survivedBattles) {
-				return
-			}
-			list.push({
-				nx: st.wins / st.battles,
-				ny: st.damageDealt / st.battles,
-				type: v?.base?.type || 0,
-				id: v.base.ID,
-				x: 0,
-				y: 0,
-			})
-		});
-
-		this.draw(list);
+	resetDot() {
+		const dot = this.lastDot;
+		if (!dot) {
+			return;
+		}
+		dot.attr('r', this.radius);
+		this.tank = {};
+		this.lastDot = null;
 	}
 
 	draw(list: Data[]) {
+		if (!this.box) {
+			return;
+		}
 
 		const svg = this.svg;
 		if (!svg) {
@@ -107,6 +118,7 @@ export class MatrixComponent implements OnChanges {
 		const self = this;
 
 		svg.selectAll('*').remove();
+		self.resetDot();
 
 		svg.selectAll('circle')
 		.data(list)
@@ -114,18 +126,19 @@ export class MatrixComponent implements OnChanges {
 		.append('svg:circle')
 		.attr('cx', v => v.x)
 		.attr('cy', v => v.y)
-		.attr('r', radius)
+		.attr('r', this.radius)
 		.attr('fill', v => d3.schemeCategory10[v.type])
-		.on("mouseover", function (v, tank) {
-			d3.select(this).attr('r', radius * 2);
+		.on('mouseover', function (v, tank) {
+
+			self.resetDot();
+
+			const dot = d3.select(this)
+			self.lastDot = dot;
+			dot.attr('r', self.radius * 2);
 			const t = self.srcMap[tank.id]
 			if (t?.base) {
 				self.tank = t.base;
 			}
-		})
-		.on("mouseout", function (v, tank) {
-			d3.select(this).attr('r', radius);
-			// self.tank = {};
 		})
 
 		const x = d3.scaleLinear().range([this.border, this.border + this.size]).domain([xMin, xMax])
