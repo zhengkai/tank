@@ -44,6 +44,7 @@ export class ListComponent implements OnInit {
 	totalNum = '';
 
 	matrixData: Data[] = [];
+	matrixName = false;
 
 	idx = 1;
 	key = '';
@@ -274,6 +275,11 @@ export class ListComponent implements OnInit {
 		this.select();
 	}
 
+	clickMatrixName() {
+		this.matrixName = !this.matrixName;
+		this.updateURI();
+	}
+
 	loadSearch() {
 
 		const us = new URLSearchParams(window.location.search);
@@ -350,6 +356,7 @@ export class ListComponent implements OnInit {
 
 		this.byBattle = !!(us.get('battle') || us.get('b'));
 		this.higher = !(us.get('higher') || us.get('h'));
+		this.matrixName = !!us.get('mn');
 	}
 
 	buildURI() {
@@ -399,6 +406,10 @@ export class ListComponent implements OnInit {
 
 		if (!this.higher) {
 			arg.push('h=0');
+		}
+
+		if (this.matrixName) {
+			arg.push('mn=1');
 		}
 
 		let search = '';

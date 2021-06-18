@@ -20,6 +20,7 @@ export interface Data {
 export class MatrixComponent implements OnChanges {
 
 	@Input() list: Data[] = [];
+	@Input() name = false;
 
 	@ViewChild('box') box!: ElementRef;
 
@@ -30,7 +31,6 @@ export class MatrixComponent implements OnChanges {
 	border = 50;
 	radius = 6;
 
-	src: pb.ITank[] = [];
 	srcMap: TankMap = {};
 
 	tank: any = {};
@@ -42,6 +42,9 @@ export class MatrixComponent implements OnChanges {
 	) {
 		(async () => {
 			this.srcMap = await api.data();
+			if (!this.ready) {
+				this.ngOnChanges();
+			}
 		})();
 	}
 
@@ -49,7 +52,6 @@ export class MatrixComponent implements OnChanges {
 		if (this.ready) {
 			return;
 		}
-		this.ready = true;
 		this.ngOnChanges();
 	}
 
@@ -62,15 +64,13 @@ export class MatrixComponent implements OnChanges {
 		}
 		this.ready = true;
 
-		const svg = d3.select(this.box.nativeElement).append('svg');
-		this.svg = svg;
-
-		this.svg.attr('height', this.size + this.border * 3)
-		.attr('width', this.size + this.border * 2);
+		this.svg = d3.select(this.box.nativeElement).append('svg');
+		this.svg.attr('height', this.size + this.border * 2)
+		.attr('width', this.size + this.border * 3);
 	}
 
 	ngOnChanges() {
-		if (!this.list.length) {
+		if (!this.list.length || !Object.keys(this.srcMap).length) {
 			return;
 		}
 		this.drawInit();
@@ -92,10 +92,58 @@ export class MatrixComponent implements OnChanges {
 			return;
 		}
 
-		const svg = this.svg;
-		if (!svg) {
+		if (!this.svg) {
 			return;
 		}
+
+		this.svg.selectAll('*').remove();
+		this.resetDot();
+
+		this.calcData(list);
+
+		const li = this.svg.selectAll('circle')
+		.data(list)
+		.enter()
+
+		if (this.name) {
+			li.append('text')
+			.attr('x', v => v.x + 8)
+			.attr('y', v => v.y + 4)
+			.style('font-size', 12)
+			.style('fill', 'gray')
+			.style('pointer-events', 'none')
+			.text(d => {
+				const t = this.srcMap[d.id]?.base;
+				if (!t) {
+					return '';
+				}
+				return t.name || '';
+			});
+		}
+
+		const self = this;
+
+		li.append('svg:circle')
+		.attr('cx', v => v.x)
+		.attr('cy', v => v.y)
+		.attr('r', this.radius)
+		.attr('fill', v => d3.schemeCategory10[v.type])
+		.attr('stroke', 'white')
+		.on('mouseover', function (v, tank) {
+
+			self.resetDot();
+
+			const dot = d3.select(this)
+			self.lastDot = dot;
+			dot.attr('r', self.radius * 2);
+			const t = self.srcMap[tank.id]
+			if (t?.base) {
+				self.tank = t.base;
+			}
+		})
+	}
+
+	calcData(list: Data[]) {
 
 		const xList = list.map(v => v.nx);
 		const yList = list.map(v => v.ny);
@@ -113,40 +161,12 @@ export class MatrixComponent implements OnChanges {
 			v.y =  this.border + (yMax - v.ny) / yRange * this.size;
 		});
 
-		const radius = 6;
-
-		const self = this;
-
-		svg.selectAll('*').remove();
-		self.resetDot();
-
-		svg.selectAll('circle')
-		.data(list)
-		.enter()
-		.append('svg:circle')
-		.attr('cx', v => v.x)
-		.attr('cy', v => v.y)
-		.attr('r', this.radius)
-		.attr('fill', v => d3.schemeCategory10[v.type])
-		.on('mouseover', function (v, tank) {
-
-			self.resetDot();
-
-			const dot = d3.select(this)
-			self.lastDot = dot;
-			dot.attr('r', self.radius * 2);
-			const t = self.srcMap[tank.id]
-			if (t?.base) {
-				self.tank = t.base;
-			}
-		})
-
 		const x = d3.scaleLinear().range([this.border, this.border + this.size]).domain([xMin, xMax])
 		const ax = d3.axisBottom(x).ticks(12);
-		svg.append('g').call(ax)
+		this.svg?.append('g').call(ax);
 
 		const y = d3.scaleLinear().range([this.border, this.border + this.size]).domain([yMax, yMin])
 		const ay = d3.axisRight(y).ticks(12);
-		svg.append('g').call(ay);
+		this.svg?.append('g').call(ay);
 	}
 }

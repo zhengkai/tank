@@ -51,6 +51,9 @@
 					<button [disabled]="(!init || t.id === key) || null" *ngFor="let t of yKeyList" (click)="clickYKey(t.id)" type="button" class="btn {{ t.id === key ? 'btn-outline-secondary' : (yKey === t.id ? 'btn-primary' : 'btn-outline-primary') }}">{{ t.name }}</button>
 				</div>
 			</div>
+			<div class="col-auto" *ngIf="tableType === 'matrix'">
+				<button class="btn {{ matrixName ? 'btn-primary' : 'btn-outline-primary' }}" (click)="clickMatrixName()">名称标签</button>
+			</div>
 		</div>
 	</div>
 </div>
@@ -77,5 +80,5 @@
 			</tr>
 		</tbody>
 	</table>
-	<app-matrix *ngIf="li.length"  [style.display]="tableType === 'matrix' ? 'block' : 'none'" [list]="matrixData"></app-matrix>
+	<app-matrix *ngIf="li.length" [style.display]="tableType === 'matrix' ? 'block' : 'none'" [list]="matrixData" [name]="matrixName"></app-matrix>
 </div>
