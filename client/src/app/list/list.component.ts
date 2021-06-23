@@ -356,7 +356,7 @@ export class ListComponent implements OnInit {
 
 		this.byBattle = !!(us.get('battle') || us.get('b'));
 		this.higher = !(us.get('higher') || us.get('h'));
-		this.matrixName = !!us.get('mn');
+		this.matrixName = us.get('mn') !== '0';
 	}
 
 	buildURI() {
@@ -408,8 +408,8 @@ export class ListComponent implements OnInit {
 			arg.push('h=0');
 		}
 
-		if (this.matrixName) {
-			arg.push('mn=1');
+		if (!this.matrixName) {
+			arg.push('mn=0');
 		}
 
 		let search = '';
