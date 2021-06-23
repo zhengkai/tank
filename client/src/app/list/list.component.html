@@ -20,8 +20,6 @@
 		<button [disabled]="!init || null" *ngFor="let t of nationList" (click)="clickNation(t.id, $event)" type="button" class="flag btn {{ selectNation.includes(t.id) ? 'btn-primary' : 'btn-outline-primary' }}"><img class="flag" src="/assets/flag/{{ t.id }}.png">{{ t.name }}</button>
 	</div>
 
-	<button [disabled]="!init || null" (click)="clickByBattle()" type="button" class="btn {{ byBattle ? 'btn-primary' : 'btn-outline-primary' }}">按出场排序</button>
-
 	<button [disabled]="!init || null" (click)="clickHigher()" type="button" class="btn {{ higher ? 'btn-primary' : 'btn-outline-primary' }}" title="战斗力前 35% 的玩家">老车长</button>
 
 	<button [disabled]="!init || null" *ngIf="li.length" (click)="copyURL()" type="button" class="btn {{ lastURI === lastCopy ? 'btn-success' : 'btn-outline-success' }}">复制地址</button>
@@ -45,6 +43,11 @@
 					<button [disabled]="!init || null" *ngFor="let t of tableList" (click)="clickTable(t.id)" type="button" class="btn {{ tableType === t.id ? 'btn-primary' : 'btn-outline-primary' }}">{{ t.name }}</button>
 				</div>
 			</div>
+
+			<div class="col-auto" *ngIf="tableType === 'table'">
+				<button [disabled]="!init || null" (click)="clickByBattle()" type="button" class="btn {{ byBattle ? 'btn-primary' : 'btn-outline-primary' }}">按出场排序</button>
+			</div>
+
 			<div class="col-auto" *ngIf="tableType === 'matrix'">
 				横轴：
 				<div class="btn-group" role="group">
