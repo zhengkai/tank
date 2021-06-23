@@ -129,7 +129,7 @@ export class MatrixComponent implements OnChanges {
 		.attr('r', this.radius)
 		.attr('fill', v => d3.schemeCategory10[v.type])
 		.attr('stroke', 'white')
-		.on('mouseover', function (v, tank) {
+		.on('mouseover', function (ev, tank) {
 
 			self.resetDot();
 
@@ -140,7 +140,7 @@ export class MatrixComponent implements OnChanges {
 			if (t?.base) {
 				self.tank = t.base;
 			}
-		})
+		});
 	}
 
 	calcData(list: Data[]) {

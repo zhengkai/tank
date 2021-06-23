@@ -67,6 +67,11 @@ export class ApiService {
 		rsp?.list?.forEach(v => {
 			const id = v?.base?.ID || 0;
 			if (id) {
+
+				if (id === 16913 && v?.base) {
+					v.base.shop = 2;
+				}
+
 				this.src[id] = v;
 			}
 		});
