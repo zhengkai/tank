@@ -11,6 +11,11 @@ div.table-bar {
 	margin-bottom: 1rem;
 }
 
+tr.shop-1, tr.shop-2 {
+	background-color: lighten(gold, 45%);
+	color: darken(gold, 30%);
+}
+
 div.list-table {
 	padding-bottom: 3rem;
 }

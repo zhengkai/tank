@@ -7,6 +7,7 @@ import { MatrixComponent, Data } from '../matrix/matrix.component';
 interface Row {
 	id: number;
 	name: string;
+	shop: number;
 	type: number;
 	tier: number;
 	nation: number;
@@ -457,6 +458,7 @@ export class ListComponent implements OnInit {
 			const o = {
 				id: v.base?.ID || 0,
 				name: v.base?.name || '',
+				shop: v.base?.shop || 0,
 				tier,
 				nation: v.base?.nation || 0,
 				type: v.base?.type || 0,

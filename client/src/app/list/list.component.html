@@ -67,7 +67,7 @@
 	</div>
 	<table class="table table-hover" *ngIf="li.length" [style.display]="tableType === 'table' ? 'block' : 'none'">
 		<tbody>
-			<tr *ngFor="let t of li">
+			<tr *ngFor="let t of li" class="shop-{{ t.shop }}">
 				<td class="num tier">{{ t.tier }}</td>
 				<td class="name"><p><span class="type-icon ty-{{ t.type }}"></span><img class="flag" src="/assets/flag/{{ t.nation }}.png">{{ t.name }}</p></td>
 				<td class="num key-num">{{ t.numShow }}</td>
