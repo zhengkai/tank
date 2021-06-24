@@ -98,6 +98,15 @@ div.topbar {
 	}
 }
 
+button > img.flag {
+	display: none;
+}
+@media (min-width: 992px) {
+	button > img.flag {
+		display: inline-block;
+	}
+}
+
 .xclip {
 	position: absolute;
 	top: -1000px;
