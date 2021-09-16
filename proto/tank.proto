@@ -57,6 +57,7 @@ message TankRaw {
 
 message TankList {
 	repeated Tank list = 1;
+	string buildTime = 2;
 }
 
 message TankStatByDate {

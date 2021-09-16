@@ -7,6 +7,7 @@ import (
 	"project/db"
 	"project/pb"
 	"project/zj"
+	"strconv"
 
 	"github.com/zhengkai/zu"
 	"google.golang.org/protobuf/proto"
@@ -19,25 +20,42 @@ func Build() (err error) {
 
 	tl := &pb.TankList{}
 
+	var dateMin int
+	var dateMax int
 	Mux.Lock()
 	for _, tb := range mapBase {
 		t := &pb.Tank{
 			Base: tb,
 		}
-
-		t.Stats, t.StatsHigher, err = db.LoadTankStats(tb.ID)
+		var date int
+		t.Stats, t.StatsHigher, date, err = db.LoadTankStats(tb.ID)
 		if err != nil {
 			zj.J(`skip`, tb.ID)
 			continue
 		}
-
 		tl.List = append(tl.List, t)
+
+		if dateMax < date {
+			dateMax = date
+		}
+		if dateMin > date || dateMin == 0 {
+			dateMin = date
+		}
 	}
 	Mux.Unlock()
 
 	if len(tl.List) < config.AssertCount {
 		err = fmt.Errorf(`tank list count: %d`, len(tl.List))
 		return
+	}
+
+	sdx := strconv.Itoa(dateMax)
+	sdx = fmt.Sprintf(`%s.%s.%s`, sdx[:4], sdx[4:6], sdx[6:])
+	tl.BuildTime = sdx
+	if dateMax != dateMin {
+		sdi := strconv.Itoa(dateMin)
+		sdi = fmt.Sprintf(`%s.%s.%s`, sdi[:4], sdi[4:6], sdi[6:])
+		tl.BuildTime += sdi
 	}
 
 	ab, err := proto.Marshal(tl)

@@ -2,6 +2,7 @@ package project
 
 import (
 	"project/cron"
+	"project/tank"
 	"project/zj"
 )
 
@@ -11,6 +12,8 @@ func Dev() {
 	common()
 
 	zj.J(`dev start`)
+
+	tank.Build()
 
 	select {}
 }

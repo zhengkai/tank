@@ -39,10 +39,14 @@ export class ListComponent implements OnInit {
 	lastCopy = 'empty';
 	lastURI = '';
 
+	srcDate = '';
+
 	srcMap: TankMap = {};
 	src: pb.ITank[] = [];
 	li: Row[] = [];
 	totalNum = '';
+
+	clickY = false;
 
 	matrixData: Data[] = [];
 	matrixName = false;
@@ -129,10 +133,6 @@ export class ListComponent implements OnInit {
 			id: pb.TankEnum.shop.Silver,
 			name: '银币车',
 		},
-		{
-			id: pb.TankEnum.shop.Premium,
-			name: '特种车',
-		},
 	];
 	nationList = [
 		{
@@ -196,6 +196,7 @@ export class ListComponent implements OnInit {
 
 	async ngOnInit(): Promise<void> {
 		this.srcMap = await this.api.data();
+		this.srcDate = this.api.buildTime;
 		this.src = Object.values(this.srcMap);
 		this.init = true;
 		this.select();
@@ -263,6 +264,7 @@ export class ListComponent implements OnInit {
 	}
 
 	clickYKey(t: string) {
+		this.clickY = true;
 		this.yKey = t;
 		this.select();
 	}
@@ -387,12 +389,13 @@ export class ListComponent implements OnInit {
 			arg.push('k=' + this.key);
 		}
 
-		if (this.key !== 'win') {
-			if (this.yKey !== 'win') {
+		if (this.key === 'win') {
+			console.log('this.key', this.key, this.yKey);
+			if (this.yKey !== 'battle') {
 				arg.push('y=' + this.yKey);
 			}
 		} else {
-			if (this.yKey !== 'battle') {
+			if (this.yKey !== 'win') {
 				arg.push('y=' + this.yKey);
 			}
 		}
@@ -434,8 +437,6 @@ export class ListComponent implements OnInit {
 
 		let maxBattle = 0;
 		let maxNum = 0;
-
-		this.updateURI();
 
 		this.src.forEach((v: pb.ITank) => {
 
@@ -497,11 +498,13 @@ export class ListComponent implements OnInit {
 		if (this.li.length) {
 			this.matrix();
 		}
+
+		this.updateURI();
 	}
 
 	matrix() {
 
-		if (this.key === this.yKey) {
+		if (this.key === this.yKey || !this.clickY) {
 			if (this.key === 'win') {
 				this.yKey = 'battle';
 			} else {

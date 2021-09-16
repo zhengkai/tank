@@ -13,6 +13,8 @@ export class ApiService {
 	srcDone = false;
 	src: TankMap = {};
 
+	buildTime = '';
+
 	cbList: (() => void)[] = [];
 
 	urlGateway = '/data/list.pb';
@@ -64,15 +66,18 @@ export class ApiService {
 		const re = new Uint8Array(res.body);
 		rsp = pb.TankList.decode(re);
 
+		this.buildTime = rsp.buildTime;
+
 		rsp?.list?.forEach(v => {
 			const id = v?.base?.ID || 0;
 			if (id) {
-
 				if (id === 16913 && v?.base) {
 					v.base.shop = 2;
 				}
-
 				this.src[id] = v;
+			}
+			if (v?.base?.shop === pb.TankEnum.shop.Premium) {
+				v.base.shop = pb.TankEnum.shop.Gold;
 			}
 		});
 	}
