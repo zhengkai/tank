@@ -55,7 +55,7 @@ func Build() (err error) {
 	if dateMax != dateMin {
 		sdi := strconv.Itoa(dateMin)
 		sdi = fmt.Sprintf(`%s.%s.%s`, sdi[:4], sdi[4:6], sdi[6:])
-		tl.BuildTime += sdi
+		tl.BuildTime = sdi + `-` + sdx
 	}
 
 	ab, err := proto.Marshal(tl)

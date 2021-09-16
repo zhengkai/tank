@@ -112,3 +112,9 @@ button > img.flag {
 	top: -1000px;
 	left: -1000px;
 }
+
+@media (max-width: 992px) {
+	td.wiki {
+		display: none;
+	}
+}

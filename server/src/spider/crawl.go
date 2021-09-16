@@ -30,9 +30,6 @@ func crawlAll(simulate bool) (err error) {
 			for _, ty := range []int{0, 1, 2} {
 				cnt, err = Crawl(lv, higher, ty, simulate)
 				cntSum += cnt
-				if err != nil {
-					break
-				}
 			}
 		}
 	}
