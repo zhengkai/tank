@@ -13,6 +13,8 @@ import (
 
 var patternDate = regexp.MustCompile(`^(\d{4})-(\d{2})-(\d{2}) `)
 
+var errEmptyList = errors.New(`empty list`)
+
 // Parse ...
 func Parse(ab []byte) (next bool, err error) {
 
@@ -28,7 +30,7 @@ func Parse(ab []byte) (next bool, err error) {
 	}
 
 	if len(d.Data.Ranking) == 0 {
-		err = errors.New(`empty list`)
+		err = errEmptyList
 		return
 	}
 

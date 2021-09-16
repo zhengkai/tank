@@ -66,7 +66,8 @@ func Crawl(tier int, higher bool, ty int, simulate bool) (cnt int, err error) {
 		}
 
 		file := fmt.Sprintf(`%s/%d-%d-%d-%s.json`, config.TmpPath, tier, page, ty, t)
-		zj.J(`file`, file)
+
+		var url string
 
 		if simulate {
 			ab, err = ioutil.ReadFile(file)
@@ -75,7 +76,7 @@ func Crawl(tier int, higher bool, ty int, simulate bool) (cnt int, err error) {
 			}
 		} else {
 			time.Sleep(time.Second)
-			url := `https://tbox.wot.360.cn/rank/more?rank_type=%s&page=%d&size=30&type=%s&tier=%d&sort=damage_dealt_avg&tank_sort=1,2,3`
+			url = `https://tbox.wot.360.cn/rank/more?rank_type=%s&page=%d&size=30&type=%s&tier=%d&sort=damage_dealt_avg&tank_sort=1,2,3`
 			url = fmt.Sprintf(url, t, page, sty, tier)
 
 			ab, err = zu.FetchURL(url)
@@ -87,7 +88,11 @@ func Crawl(tier int, higher bool, ty int, simulate bool) (cnt int, err error) {
 
 		cnt++
 		next, err = Parse(ab)
+		if page > 1 && err == errEmptyList {
+			err = nil
+		}
 		if err != nil {
+			zj.J(`prase`, url, err)
 			break
 		}
 
