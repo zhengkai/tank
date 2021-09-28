@@ -24,7 +24,7 @@ if [ -d "vendor" ]; then
 	VENDOR="-mod=vendor"
 fi
 
-go build $VENDOR \
+CGO_ENABLED=0 go build $VENDOR \
 	-ldflags "$LDFLAGS" \
 	-o "$EXE_NEXT" \
 	"../build/${TYPE}/"*.go \

@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.25, for Linux (x86_64)
 --
--- Host: localhost    Database: wot
+-- Host: localhost    Database: tank
 -- ------------------------------------------------------
 -- Server version	8.0.25
 
@@ -16,14 +16,14 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Current Database: `wot`
+-- Current Database: `tank`
 --
 
-/*!40000 DROP DATABASE IF EXISTS `wot`*/;
+/*!40000 DROP DATABASE IF EXISTS `tank`*/;
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `wot` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `tank` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
-USE `wot`;
+USE `tank`;
 
 --
 -- Table structure for table `stat`

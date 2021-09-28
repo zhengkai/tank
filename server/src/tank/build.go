@@ -87,5 +87,5 @@ func Build() (err error) {
 
 // File ...
 func File() string {
-	return config.FilePath + `/list.pb`
+	return config.OutputPath + `/list.pb`
 }

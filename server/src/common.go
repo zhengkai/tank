@@ -2,6 +2,7 @@ package project
 
 import (
 	"project/build"
+	"project/config"
 	"project/db"
 	"project/tank"
 )
@@ -9,7 +10,7 @@ import (
 func common() {
 	build.DumpBuildInfo()
 
-	db.WaitConn(`wot:wot@/wot`)
+	db.WaitConn(config.MySQL)
 
 	// spider.CrawlAllSimulate()
 
