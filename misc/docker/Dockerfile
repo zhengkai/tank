@@ -13,8 +13,6 @@ RUN cd /project/proto && make
 
 RUN /project/server/build/build-server.sh prod
 
-RUN go version
-
 # clean stage
 
 FROM alpine

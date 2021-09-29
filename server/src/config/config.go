@@ -7,7 +7,7 @@ var TmpPath = `/www/tank/tmp`
 var OutputPath = `/www/tank/output`
 
 // MySQL ...
-var MySQL = `gnar:gnar@/gnar`
+var MySQL = `tank:tank@/tank`
 
 // AssertCount 坦克数据至少应该有多少
 const AssertCount = 600

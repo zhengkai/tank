@@ -28,8 +28,12 @@ func crawlAll(simulate bool) (err error) {
 	for lv := 10; lv >= 3; lv-- {
 		for _, higher := range []bool{false, true} {
 			for _, ty := range []int{0, 1, 2} {
+				t := time.Now()
 				cnt, err = Crawl(lv, higher, ty, simulate)
 				cntSum += cnt
+				if cnt > 0 {
+					zj.J(`crawl row`, lv, higher, ty, time.Now().Sub(t), cnt)
+				}
 			}
 		}
 	}
@@ -78,6 +82,7 @@ func Crawl(tier int, higher bool, ty int, simulate bool) (cnt int, err error) {
 
 			ab, err = zu.FetchURL(url)
 			if err != nil {
+				zj.W(`fetch url fail`, err)
 				return
 			}
 			ioutil.WriteFile(file, ab, 0666)
@@ -86,12 +91,15 @@ func Crawl(tier int, higher bool, ty int, simulate bool) (cnt int, err error) {
 		cnt++
 		next, err = Parse(ab)
 		if page > 1 && err == errEmptyList {
+			next = false
 			err = nil
 		}
 		if err != nil {
 			zj.J(`prase`, url, err)
 			break
 		}
+
+		zj.J(`url`, url)
 
 		if !next {
 			break

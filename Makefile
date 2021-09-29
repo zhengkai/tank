@@ -19,3 +19,6 @@ prod:
 
 stopprod:
 	./server/build/stop-server.sh prod
+
+install:
+	cd misc/docker && make install
