@@ -80,7 +80,12 @@ func Crawl(tier int, higher bool, ty int, simulate bool) (cnt int, err error) {
 			url = `https://tbox.wot.360.cn/rank/more?rank_type=%s&page=%d&size=30&type=%s&tier=%d&sort=damage_dealt_avg&tank_sort=1,2,3`
 			url = fmt.Sprintf(url, t, page, sty, tier)
 
-			ab, err = zu.FetchURL(url)
+			for range []int{0, 0, 0} {
+				ab, err = zu.FetchURL(url)
+				if err != nil {
+					break
+				}
+			}
 			if err != nil {
 				zj.W(`fetch url fail`, err)
 				return
