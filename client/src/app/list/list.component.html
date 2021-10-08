@@ -61,6 +61,10 @@
 	</div>
 </div>
 
+<div *ngIf="!init" class="container loading">
+	<p>数据加载中……</p>
+</div>
+
 <div class="container list-table">
 	<div class="no-result" *ngIf="!li.length && init">
 		<p>查无结果，请换个过滤条件，或者 <button class="btn btn-danger" (click)="clickReset()">重置条件</button> </p>
