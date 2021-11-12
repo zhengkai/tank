@@ -5,23 +5,26 @@ import (
 )
 
 var io = j.New(&j.Config{
-	Filename: `log/io.log`,
-	Prefix:   `[IO] `,
-	Tunnel:   100,
-	Caller:   j.CallerNone,
+	Filename:   `log/io.log`,
+	Prefix:     `[IO] `,
+	Tunnel:     100,
+	Caller:     j.CallerNone,
+	TimeFormat: j.TimeMonth,
 })
 
 var defaultLog = j.New(&j.Config{
-	Filename: `log/default.log`,
-	Tunnel:   100,
-	Caller:   j.CallerShort,
+	Filename:   `log/default.log`,
+	Tunnel:     100,
+	Caller:     j.CallerShort,
+	TimeFormat: j.TimeMonth,
 })
 
 var warnLog = j.New(&j.Config{
-	Filename: `log/warn.log`,
-	Prefix:   `[WARN] `,
-	Tunnel:   100,
-	Caller:   j.CallerShort,
+	Filename:   `log/warn.log`,
+	Prefix:     `[WARN] `,
+	Tunnel:     100,
+	Caller:     j.CallerShort,
+	TimeFormat: j.TimeMonth,
 })
 
 func init() {

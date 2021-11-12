@@ -79,6 +79,7 @@ func Crawl(tier int, higher bool, ty int, simulate bool) (cnt int, err error) {
 			time.Sleep(time.Second)
 			url = `https://tbox.wot.360.cn/rank/more?rank_type=%s&page=%d&size=30&type=%s&tier=%d&sort=damage_dealt_avg&tank_sort=1,2,3`
 			url = fmt.Sprintf(url, t, page, sty, tier)
+			zj.J(url)
 
 			for range []int{0, 0, 0} {
 				ab, err = zu.FetchURL(url)
@@ -100,7 +101,7 @@ func Crawl(tier int, higher bool, ty int, simulate bool) (cnt int, err error) {
 			err = nil
 		}
 		if err != nil {
-			zj.J(`prase`, url, err)
+			zj.W(`prase`, url, err)
 			break
 		}
 

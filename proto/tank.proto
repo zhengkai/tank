@@ -48,11 +48,11 @@ message TankRaw {
 	uint64 wins = 13;
 	uint64 shots = 14;
 	uint64 damage_dealt = 15;
-	string killed_avg = 16;
+	double killed_avg = 16;
 	uint32 tank_sort = 17;
 	string tank_nation = 18;
 	uint32 tank_status = 19;
-	string battle_rate = 20;
+	double battle_rate = 20;
 }
 
 message TankList {
