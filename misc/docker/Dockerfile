@@ -23,4 +23,6 @@ COPY --from=builder /project/server/dist/prod/tank-server-next /tank-server
 
 RUN apk add --no-cache gzip brotli
 
+ENV TZ="Asia/Shanghai"
+
 CMD ["/tank-server"]

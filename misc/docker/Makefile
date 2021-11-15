@@ -1,6 +1,8 @@
 SHELL:=/bin/bash
 
 build: git
+	echo "tank 的 docker 网络有问题，暂时屏蔽"
+	exit 1
 	sudo docker build -t tank -f Dockerfile ../..
 
 run: build
