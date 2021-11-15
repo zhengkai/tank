@@ -33,6 +33,10 @@ func Build() (err error) {
 			zj.J(`skip`, tb.ID)
 			continue
 		}
+		if t.Stats == nil && t.StatsHigher == nil {
+			continue
+		}
+
 		tl.List = append(tl.List, t)
 
 		if dateMax < date {

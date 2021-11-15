@@ -15,8 +15,8 @@ func Dev() {
 
 	zj.J(`dev start`)
 
-	// tank.Build()
-	spider.CrawlAll()
+	tank.Build()
+	// spider.CrawlAll()
 
 	select {}
 }
