@@ -1,13 +1,17 @@
-#!/bin/bash
+#!/bin/bash -ex
 
 if [ "$HOSTNAME" != "Gnar" ]; then
 	>&2 echo only run in server Gnar
 	# exit 1
 fi
 
-sudo docker stop tank
-sudo docker rm tank
-sudo docker rmi tank
+mkdir -p /www/tank/output
+mkdir -p /www/tank/log
+mkdir -p /www/tank/tmp
+
+sudo docker stop tank || :
+sudo docker rm tank || :
+sudo docker rmi tank || :
 
 sudo cat /tmp/docker-tank.tar | sudo docker load
 # sudo cat /www/gnar/docker-demo-image.tar | sudo docker load

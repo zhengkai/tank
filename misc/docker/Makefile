@@ -1,8 +1,6 @@
 SHELL:=/bin/bash
 
 build: git
-	echo "tank 的 docker 网络有问题，暂时屏蔽"
-	exit 1
 	sudo docker build -t tank -f Dockerfile ../..
 
 run: build
@@ -14,9 +12,9 @@ run: build
 
 install: build
 	sudo docker save tank > docker-tank.tar
-	scp docker-tank.tar freya:/tmp
-	scp install.sh freya:/tmp
-	ssh freya "chmod +x /tmp/install.sh && /tmp/install.sh && rm /tmp/install.sh"
+	scp docker-tank.tar eirena:/tmp
+	scp install.sh eirena:/tmp
+	ssh eirena "chmod +x /tmp/install.sh && /tmp/install.sh && rm /tmp/install.sh"
 
 git:
 	../../server/build/git-hash.sh > ../../server/build/.git-hash
