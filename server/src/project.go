@@ -13,7 +13,8 @@ func Dev() {
 
 	zj.J(`dev start`)
 
-	tank.Build()
+	tank.Date()
+	// tank.Build()
 	// spider.CrawlAll()
 
 	select {}
