@@ -1,8 +1,10 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 
-if [ "$HOSTNAME" != "Gnar" ]; then
-	>&2 echo only run in server Gnar
-	# exit 1
+TARGET="Eirena"
+
+if [ "$HOSTNAME" != "$TARGET" ]; then
+	>&2 echo "only run in server $TARGET"
+	exit
 fi
 
 mkdir -p /www/tank/output
@@ -14,7 +16,6 @@ sudo docker rm tank || :
 sudo docker rmi tank || :
 
 sudo cat /tmp/docker-tank.tar | sudo docker load
-# sudo cat /www/gnar/docker-demo-image.tar | sudo docker load
 
 sudo docker run -d --name tank \
 	--env "TANK_MYSQL=tank:tank@tcp(172.17.0.1:3306)/tank" \

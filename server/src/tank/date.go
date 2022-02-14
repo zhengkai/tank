@@ -3,6 +3,7 @@ package tank
 import (
 	"fmt"
 	"os"
+	"project/config"
 	"project/db"
 	"project/pb"
 	"project/zj"
@@ -125,7 +126,7 @@ func (dd *dateData) arrange() {
 
 func (dd *dateData) file(date []uint32) (f *os.File, err error) {
 
-	f, err = os.OpenFile(`/tmp/tank.csv`, os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0666)
+	f, err = os.OpenFile(config.OutputPath+`/tank.csv`, os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		return
 	}

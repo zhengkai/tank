@@ -51,5 +51,6 @@ func do() {
 		zj.J(`cron`)
 		spider.CrawlAll()
 		tank.Build()
+		tank.Date()
 	}
 }
