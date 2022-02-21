@@ -6,7 +6,6 @@ import (
 	"project/config"
 	"project/db"
 	"project/pb"
-	"project/zj"
 	"sort"
 	"strconv"
 	"strings"
@@ -24,29 +23,34 @@ type dateData struct {
 	tankMap map[uint32]map[uint32]uint64
 	tankTop map[uint32]uint64
 	baseMap map[uint32]*pb.TankBase
+	higher  bool
 }
 
 // Date ...
 func Date() {
 
-	list, err := db.LoadTankBase()
-	if err != nil {
-		return
-	}
+	for _, isHigher := range []bool{false, true} {
 
-	o := dateData{
-		dateMap: make(map[uint32]bool),
-		tankMap: make(map[uint32]map[uint32]uint64),
-		tankTop: make(map[uint32]uint64),
-		baseMap: make(map[uint32]*pb.TankBase),
-	}
+		list, err := db.LoadTankBase()
+		if err != nil {
+			return
+		}
 
-	for _, v := range list {
-		o.baseMap[v.ID] = v
-		o.dateByTank(v.ID)
-	}
+		o := dateData{
+			dateMap: make(map[uint32]bool),
+			tankMap: make(map[uint32]map[uint32]uint64),
+			tankTop: make(map[uint32]uint64),
+			baseMap: make(map[uint32]*pb.TankBase),
+			higher:  isHigher,
+		}
 
-	o.arrange()
+		for _, v := range list {
+			o.baseMap[v.ID] = v
+			o.dateByTank(v.ID)
+		}
+
+		o.arrange()
+	}
 
 	// zj.J(o.tankTop)
 }
@@ -56,7 +60,7 @@ func (dd *dateData) dateByTank(id uint32) (re []*dateRow) {
 	var battle uint64
 	m := make(map[uint32]uint64)
 	for {
-		list, err := db.LoadTankDateStats(id, false, date)
+		list, err := db.LoadTankDateStats(id, dd.higher, date)
 		if err != nil {
 			break
 		}
@@ -120,13 +124,18 @@ func (dd *dateData) arrange() {
 		}
 		f.Write(br)
 	}
-
-	zj.J(d)
 }
 
 func (dd *dateData) file(date []uint32) (f *os.File, err error) {
 
-	f, err = os.OpenFile(config.OutputPath+`/tank.csv`, os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0666)
+	name := `tank`
+	if dd.higher {
+		name += `-higher`
+	}
+
+	name = fmt.Sprintf(`%s/%s.csv`, config.OutputPath, name)
+
+	f, err = os.OpenFile(name, os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		return
 	}
@@ -135,7 +144,7 @@ func (dd *dateData) file(date []uint32) (f *os.File, err error) {
 
 	for _, v := range date {
 		s := strconv.Itoa(int(v))
-		f.WriteString(`,` + s[:4] + `-` + s[4:6] + `-` + s[6:])
+		fmt.Fprintf(f, `,%s-%s-%s`, s[:4], s[4:6], s[6:])
 	}
 	f.Write(br)
 

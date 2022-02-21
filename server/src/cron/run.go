@@ -28,13 +28,10 @@ func Run() {
 	next := now.Add(m)
 
 	diff := next.Sub(now)
-	if diff < 0 {
-		diff += interval
+	if diff > 0 {
+		time.Sleep(diff)
+		chDo <- true
 	}
-
-	time.Sleep(diff)
-	chDo <- true
-
 	for {
 		time.Sleep(interval)
 
