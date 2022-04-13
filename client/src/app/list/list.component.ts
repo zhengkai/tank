@@ -117,6 +117,18 @@ export class ListComponent implements OnInit {
 			id: 'survived',
 			name: '幸存',
 		},
+		{
+			id: 'p1',
+			name: '1环',
+		},
+		{
+			id: 'p2',
+			name: '2环',
+		},
+		{
+			id: 'p3',
+			name: '3环',
+		},
 	];
 	yKeyList = [
 		{
@@ -563,6 +575,18 @@ export class ListComponent implements OnInit {
 
 		case 'survived':
 			return (st.survivedBattles || 0) / battle;
+
+		case 'p1':
+			return st.p1 || 0;
+
+		case 'p2':
+			return st.p2 || 0;
+
+		case 'p3':
+			return st.p3 || 0;
+
+		default:
+			console.log('unknown key', key)
 		}
 
 		return 0;
@@ -645,6 +669,24 @@ export class ListComponent implements OnInit {
 			r.num = x2 / b;
 			r.numShow = (r.num * 100).toFixed(2) + '%';
 			break;
+
+		case 'p1':
+			r.num = s?.p1 || 0;
+			r.numShow = '' + formatNumber(Math.round(r.num), 'en-US');
+			break;
+
+		case 'p2':
+			r.num = s?.p2 || 0;
+			r.numShow = '' + formatNumber(Math.round(r.num), 'en-US');
+			break;
+
+		case 'p3':
+			r.num = s?.p3 || 0;
+			r.numShow = '' + formatNumber(Math.round(r.num), 'en-US');
+			break;
+
+		default:
+			console.log('unknown key', this.key)
 		}
 		return i;
 	}

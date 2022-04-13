@@ -55,6 +55,11 @@ message TankRaw {
 	double battle_rate = 20;
 }
 
+message TankPercentRaw {
+	uint32 tank_id = 1;
+	double mastery = 2;
+}
+
 message TankList {
 	repeated Tank list = 1;
 	string buildTime = 2;
@@ -86,6 +91,9 @@ message TankBase {
 }
 
 message TankStats {
+	uint32 p1 = 1;
+	uint32 p2 = 2;
+	uint32 p3 = 3;
 	uint64 frags = 7;
 	uint64 spotted = 8;
 	uint64 xp = 9;

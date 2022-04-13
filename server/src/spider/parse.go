@@ -4,11 +4,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"project/db"
 	"project/pb"
 	"project/tank"
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 )
 
 var patternDate = regexp.MustCompile(`^(\d{4})-(\d{2})-(\d{2}) `)
@@ -29,19 +31,25 @@ func Parse(ab []byte) (next bool, err error) {
 		return
 	}
 
-	if len(d.Data.Ranking) == 0 {
+	date := d.GetData().GetModify()
+	if date == `` {
+		err = errors.New(`no date`)
+		return
+	}
+	r := d.GetData().GetRanking()
+	if len(r) == 0 {
 		err = errEmptyList
 		return
 	}
 
-	for _, v := range d.Data.Ranking {
-		err = parseOne(v, d.Data.Modify)
+	for _, v := range r {
+		err = parseOne(v, date)
 		if err != nil {
 			return
 		}
 	}
 
-	next = d.Data.Next == 1
+	next = d.GetData().GetNext() == 1
 	return
 }
 
@@ -69,5 +77,26 @@ func parseOne(raw *pb.TankRaw, date string) (err error) {
 		return
 	}
 
+	return
+}
+
+// ParsePercent ...
+func ParsePercent(ab []byte, percent int) (next bool, err error) {
+
+	d := &pb.RankPercent{}
+	err = json.Unmarshal(ab, d)
+	if err != nil {
+		return
+	}
+
+	date := time.Now().Format(`20060203`)
+	di, _ := strconv.Atoi(date)
+
+	for _, v := range d.GetData().GetRanking() {
+		db.UpdatePercent(v.TankId, di, percent, int(v.Mastery))
+		tank.UpdatePercent(v.TankId, uint32(v.Mastery), percent)
+	}
+
+	next = d.GetData().GetNext() == 1
 	return
 }

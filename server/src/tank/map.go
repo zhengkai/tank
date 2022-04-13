@@ -23,7 +23,18 @@ func InitMap() {
 
 	for _, v := range list {
 		mapBase[v.ID] = v
+		initPercentPool(v.ID)
 	}
+}
+
+func initPercentPool(id uint32) {
+	p1, p2, p3, err := db.GetPercent(id)
+	if err != nil {
+		return
+	}
+	UpdatePercent(id, p1, 1)
+	UpdatePercent(id, p2, 2)
+	UpdatePercent(id, p3, 3)
 }
 
 func poolUpdate(tb *pb.TankBase) (err error) {

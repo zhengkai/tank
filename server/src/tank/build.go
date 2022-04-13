@@ -37,6 +37,15 @@ func Build() (err error) {
 			continue
 		}
 
+		p1, p2, p3 := defaultPercent.Get(tb.ID)
+		for _, s := range []*pb.TankStats{t.Stats, t.StatsHigher} {
+			if s != nil {
+				s.P1 = p1
+				s.P2 = p2
+				s.P3 = p3
+			}
+		}
+
 		tl.List = append(tl.List, t)
 
 		if dateMax < date {
@@ -69,6 +78,17 @@ func Build() (err error) {
 
 	file := File()
 
+	buildWriteFile(file, ab)
+
+	zj.J(`build`, file, len(ab), len(tl.List))
+
+	return
+}
+
+func buildWriteFile(file string, ab []byte) (err error) {
+
+	defer zj.Watch(&err)
+
 	err = ioutil.WriteFile(file, ab, 0666)
 	if err != nil {
 		return
@@ -83,8 +103,6 @@ func Build() (err error) {
 	if err != nil {
 		return
 	}
-
-	zj.J(`build`, file, len(ab), len(tl.List))
 
 	return
 }

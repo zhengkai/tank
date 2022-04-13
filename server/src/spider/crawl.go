@@ -36,7 +36,17 @@ func crawlAll(simulate bool) (err error) {
 				}
 			}
 		}
+
+		for _, percent := range []int{1, 2, 3} {
+			t := time.Now()
+			cnt, err = CrawlPercent(lv, percent, simulate)
+			cntSum += cnt
+			if cnt > 0 {
+				zj.J(`crawl percent`, lv, percent, time.Now().Sub(t), cnt)
+			}
+		}
 	}
+
 	zj.J(`crawl`, cntSum)
 	return
 }
@@ -68,7 +78,7 @@ func Crawl(tier int, higher bool, ty int, simulate bool) (cnt int, err error) {
 
 		file := fmt.Sprintf(`%s/%d-%d-%d-%s.json`, config.TmpPath, tier, page, ty, t)
 
-		var url string
+		url := `https://tbox.wot.360.cn/rank/more?rank_type=%s&page=%d&size=30&type=%s&tier=%d&sort=damage_dealt_avg&tank_sort=1,2,3`
 
 		if simulate {
 			ab, err = ioutil.ReadFile(file)
@@ -77,7 +87,6 @@ func Crawl(tier int, higher bool, ty int, simulate bool) (cnt int, err error) {
 			}
 		} else {
 			time.Sleep(time.Second)
-			url = `https://tbox.wot.360.cn/rank/more?rank_type=%s&page=%d&size=30&type=%s&tier=%d&sort=damage_dealt_avg&tank_sort=1,2,3`
 			url = fmt.Sprintf(url, t, page, sty, tier)
 			zj.J(url)
 
@@ -105,7 +114,66 @@ func Crawl(tier int, higher bool, ty int, simulate bool) (cnt int, err error) {
 			break
 		}
 
-		zj.J(`url`, url)
+		if !next {
+			break
+		}
+	}
+	return
+}
+
+// CrawlPercent ...
+func CrawlPercent(tier, percent int, simulate bool) (cnt int, err error) {
+
+	percentNum := 65
+	if percent == 2 {
+		percentNum = 85
+	} else if percent == 3 {
+		percentNum = 95
+	}
+
+	var ab []byte
+	var next bool
+	var page int
+	for {
+		page++
+
+		var url string
+		file := fmt.Sprintf(`%s/percent-%d-%d-%d.json`, config.TmpPath, tier, percent, page)
+
+		if simulate {
+			ab, err = ioutil.ReadFile(file)
+			if err != nil {
+				return
+			}
+		} else {
+			time.Sleep(time.Second)
+
+			url = `https://tbox.wot.360.cn/rank/more?percentile=%d&rank_type=default&page=%d&size=30&type=&tier=%d&sort=mastery&tank_sort=&nation=`
+			url = fmt.Sprintf(url, percentNum, page, tier)
+
+			for range []int{0, 0, 0} {
+				ab, err = zu.FetchURL(url)
+				if err != nil {
+					break
+				}
+			}
+			if err != nil {
+				zj.W(`fetch url fail`, err)
+				return
+			}
+			ioutil.WriteFile(file, ab, 0666)
+		}
+
+		cnt++
+		next, err = ParsePercent(ab, percent)
+		if page > 1 && err == errEmptyList {
+			next = false
+			err = nil
+		}
+		if err != nil {
+			zj.W(`prase`, url, err)
+			break
+		}
 
 		if !next {
 			break
