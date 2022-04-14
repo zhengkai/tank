@@ -92,6 +92,7 @@ export class ListComponent implements OnInit {
 			name: 'SPG',
 		},
 	];
+	defaultKey = 'p3';
 	keyList = [
 		{
 			id: 'dmg',
@@ -106,18 +107,6 @@ export class ListComponent implements OnInit {
 			name: '经验',
 		},
 		{
-			id: 'frag',
-			name: '击毁',
-		},
-		{
-			id: 'spot',
-			name: '点亮',
-		},
-		{
-			id: 'survived',
-			name: '幸存',
-		},
-		{
 			id: 'p1',
 			name: '1环',
 		},
@@ -128,6 +117,18 @@ export class ListComponent implements OnInit {
 		{
 			id: 'p3',
 			name: '3环',
+		},
+		{
+			id: 'frag',
+			name: '击毁',
+		},
+		{
+			id: 'spot',
+			name: '点亮',
+		},
+		{
+			id: 'survived',
+			name: '幸存',
 		},
 	];
 	yKeyList = [
@@ -340,7 +341,7 @@ export class ListComponent implements OnInit {
 			}
 		});
 
-		this.key = this.keyList[0].id;
+		this.key = this.defaultKey;
 		const key = us.get('key') || us.get('k');
 		for (const row of this.keyList) {
 			if (key === row.id) {
@@ -397,7 +398,7 @@ export class ListComponent implements OnInit {
 			arg.push('n=' + nation);
 		}
 
-		if (this.key != this.keyList[0].id) {
+		if (this.key != this.defaultKey) {
 			arg.push('k=' + this.key);
 		}
 
