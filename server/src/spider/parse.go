@@ -89,7 +89,7 @@ func ParsePercent(ab []byte, percent int) (next bool, err error) {
 		return
 	}
 
-	date := time.Now().Format(`20060203`)
+	date := time.Now().Format(`20060102`)
 	di, _ := strconv.Atoi(date)
 
 	for _, v := range d.GetData().GetRanking() {

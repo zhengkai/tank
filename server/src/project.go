@@ -2,7 +2,6 @@ package project
 
 import (
 	"project/cron"
-	"project/tank"
 	"project/zj"
 )
 
@@ -14,7 +13,9 @@ func Dev() {
 	zj.J(`dev start`)
 
 	// tank.Date()
-	tank.Build()
+	// tank.BuildHistory()
+	go cron.Run()
+	// tank.Build()
 	// spider.CrawlAllSimulate()
 
 	select {}

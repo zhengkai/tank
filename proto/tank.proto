@@ -65,8 +65,9 @@ message TankList {
 	string buildTime = 2;
 }
 
-message TankStatByDate {
-	repeated TankStatDate list = 1;
+message TankStatHistory {
+	uint32 tank_id = 1;
+	repeated TankStatDate list = 2;
 }
 
 message TankStatDate {

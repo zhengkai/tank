@@ -112,3 +112,49 @@ func LoadTankDateStats(id uint32, higher bool, date uint32) (list []*DateStats, 
 
 	return
 }
+
+// LoadTankRecentStats ...
+func LoadTankRecentStats(id uint32) (list []*pb.TankStatDate, err error) {
+
+	defer zj.Watch(&err)
+
+	query := `SELECT def, hi, date FROM stat WHERE tank_id = ? ORDER BY date DESC LIMIT 100`
+	row, err := d.Query(query, id)
+	if err != nil {
+		return
+	}
+	defer row.Close()
+
+	var def []byte
+	var hi []byte
+
+	for row.Next() {
+
+		d := &pb.TankStatDate{}
+
+		err = row.Scan(&def, &hi, &d.Date)
+		if err != nil {
+			return
+		}
+
+		if len(def) > 0 {
+			st := &pb.TankStats{}
+			err = proto.Unmarshal(def, st)
+			if err != nil {
+				break
+			}
+			d.Stats = st
+		}
+		if len(hi) > 0 {
+			st := &pb.TankStats{}
+			err = proto.Unmarshal(hi, st)
+			if err != nil {
+				break
+			}
+			d.StatsHigher = st
+		}
+		list = append(list, d)
+	}
+
+	return
+}

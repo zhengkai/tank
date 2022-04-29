@@ -3,16 +3,14 @@ package cron
 import (
 	"project/spider"
 	"project/tank"
-	"project/zj"
+	"strconv"
 	"time"
 
 	"github.com/zhengkai/zu"
 )
 
-const min = time.Second * 100
-const interval = time.Hour * 2
-
 var chDo = make(chan bool)
+var chHistory = make(chan bool)
 
 // Run ...
 func Run() {
@@ -22,21 +20,18 @@ func Run() {
 	}
 
 	go do()
+	go history()
 
-	m := time.Hour - time.Duration(time.Now().Unix()%7200)*time.Second
-	now := time.Now()
-	next := now.Add(m)
-
-	diff := next.Sub(now)
-	if diff > 0 {
-		time.Sleep(diff)
-		chDo <- true
-	}
 	for {
-		time.Sleep(interval)
+		time.Sleep(time.Second * 10)
 
 		select {
 		case chDo <- true:
+		default:
+		}
+
+		select {
+		case chHistory <- true:
 		default:
 		}
 	}
@@ -45,9 +40,36 @@ func Run() {
 func do() {
 	for {
 		<-chDo
-		zj.J(`cron`)
+
+		// minutes
+		if time.Now().Format(`04`) != `15` {
+			continue
+		}
+
+		// hours
+		h, _ := strconv.Atoi(time.Now().Format(`15`))
+		if h%2 == 0 {
+			continue
+		}
+
 		spider.CrawlAll()
 		tank.Build()
 		tank.Date()
+
+		time.Sleep(time.Minute * 62)
+	}
+}
+
+func history() {
+	for {
+		<-chHistory
+
+		if time.Now().Format(`1504`) != `0702` {
+			continue
+		}
+
+		tank.BuildHistory()
+
+		time.Sleep(time.Minute * 10)
 	}
 }
