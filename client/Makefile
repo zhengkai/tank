@@ -1,6 +1,6 @@
 SHELL:=/bin/bash
 
-NG := "./node_modules/@angular/cli/bin/ng"
+NG := "./node_modules/@angular/cli/bin/ng.js"
 
 $(shell cp -n .config.default config.ini)
 -include config.ini

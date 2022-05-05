@@ -84,11 +84,35 @@
 						<div class="battle" style="width: {{ t.battleWidth }}"></div>
 					</div>
 				</td>
-				<td class="wiki num">
-					<a target="_blank" href="https://wotgame.cn/zh-cn/tankopedia/{{ t.id }}/">参数</a>
+				<td>
+					<button class="btn btn-sm btn-primary" (click)="history(t.id)">历史</button>
+				</td>
+				<td>
+					<button class="btn btn-sm btn-primary" >tanks.gg</button>
+				</td>
+				<td>
+					<a class="btn btn-sm btn-primary" target="_blank" href="https://wotgame.cn/zh-cn/tankopedia/{{ t.id }}/">参数</a>
 				</td>
 			</tr>
 		</tbody>
 	</table>
 	<app-matrix *ngIf="li.length" [style.display]="tableType === 'matrix' ? 'block' : 'none'" [list]="matrixData" [name]="matrixName"></app-matrix>
+</div>
+
+<div class="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="display: block; background-color: rgba(0, 0, 0, 0.8);">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+		<app-history></app-history>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
 </div>

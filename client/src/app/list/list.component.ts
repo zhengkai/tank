@@ -39,6 +39,8 @@ export class ListComponent implements OnInit {
 	lastCopy = 'empty';
 	lastURI = '';
 
+	historyID = 0;
+
 	srcDate = '';
 
 	srcMap: TankMap = {};
@@ -623,6 +625,10 @@ export class ListComponent implements OnInit {
 			v.battleRate = v.battle / maxBattle;
 			v.battleWidth = (v.battleRate * 100).toFixed(2) + '%';
 		});
+	}
+
+	history(id: number): void {
+		console.log('history', id);
 	}
 
 	calcNum(s: pb.ITankStats, r: Row): number {

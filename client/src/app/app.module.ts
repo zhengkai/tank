@@ -6,12 +6,14 @@ import { AppRoutingModule } from './common/routing.module';
 import { BootstrapComponent } from './common/bootstrap.component';
 import { ListComponent } from './list/list.component';
 import { MatrixComponent } from './matrix/matrix.component';
+import { HistoryComponent } from './history/history.component';
 
 @NgModule({
 	declarations: [
 		BootstrapComponent,
   ListComponent,
   MatrixComponent,
+  HistoryComponent,
 	],
 	imports: [
 		BrowserModule,

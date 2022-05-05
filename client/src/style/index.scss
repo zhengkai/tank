@@ -9,6 +9,11 @@ td.num {
 	font-family: var(--bs-font-monospace);
 }
 
+td > .btn {
+	margin-top: -8px;
+	margin-bottom: -6px;
+}
+
 html, body {
 	height: 100%;
 }

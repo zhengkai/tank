@@ -57,6 +57,9 @@ export class ApiService {
 			responseType: 'arraybuffer',
 		}).toPromise();
 		const res = await post;
+		if (!res) {
+			return;
+		}
 
 		let rsp: pb.TankList;
 		if (res.status !== 200 || !res.body) {
