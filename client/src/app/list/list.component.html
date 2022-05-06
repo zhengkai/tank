@@ -87,7 +87,7 @@
 				<td>
 					<button class="btn btn-sm btn-primary" (click)="historyClick(t.id)">历史</button>
 				</td>
-				<td>
+				<td class="extra">
 					<a class="btn btn-sm btn-primary" target="_blank" href="https://wotgame.cn/zh-cn/tankopedia/{{ t.id }}/">参数</a>
 				</td>
 				<!--
@@ -109,14 +109,14 @@
 				<button (click)="historyClick(0)" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<div class="row mb-4">
-					<div class="col-auto btn-group" role="group">
+				<div class="row">
+					<div class="col-auto mb-2 btn-group" role="group">
 						<button [disabled]="!init || null" *ngFor="let t of yKeyList" (click)="clickHistoryKey(t.id)" type="button" class="btn {{ historyKey === t.id ? 'btn-primary' : 'btn-outline-primary' }}">{{ t.name }}</button>
 					</div>
-					<div class="col-auto">
+					<div class="col-auto mb-2">
 						<button [disabled]="!init || null" (click)="clickHigher()" type="button" class="btn {{ higher ? 'btn-primary' : 'btn-outline-primary' }}" title="战斗力前 35% 的玩家">老车长</button>
 					</div>
-					<div class="col-auto">
+					<div class="col-auto mb-2">
 						<button (click)="clickZeroStart()" class="btn {{ zeroStart ? 'btn-primary' : 'btn-outline-primary' }}">零起始</button>
 					</div>
 				</div>

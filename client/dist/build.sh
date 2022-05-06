@@ -37,7 +37,7 @@ echo
 
 set -x
 
-NG_CLI_ANALYTICS=ci ./node_modules/@angular/cli/bin/ng \
+NG_CLI_ANALYTICS=ci ./node_modules/@angular/cli/bin/ng.js \
 	build --output-path "$TMP_DIR" --base-href "$URL"
 
 rm "${TMP_DIR}/assets/.gitignore" || :

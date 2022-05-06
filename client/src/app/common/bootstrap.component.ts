@@ -15,7 +15,7 @@ export class BootstrapComponent {
 	constructor(
 		public api: ApiService,
 	) {
-		this.prod = !environment.production;
+		this.prod = environment.production;
 
 		(async () => {
 			await api.data();

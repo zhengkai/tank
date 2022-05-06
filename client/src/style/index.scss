@@ -50,4 +50,17 @@ img.flag {
 	}
 }
 
+td .btn {
+	word-break: keep-all;
+}
+
+td.extra {
+	display: none;
+}
+@media (min-width: 1200px) {
+	td.extra {
+		display: block;
+	}
+}
+
 @import "./icon.scss";
