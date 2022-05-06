@@ -6,4 +6,8 @@
 
 <br *ngIf="!prod">
 
-<router-outlet></router-outlet>
+<div class="container" *ngIf="!init">
+	<p>loading ...</p>
+</div>
+
+<router-outlet *ngIf="init"></router-outlet>

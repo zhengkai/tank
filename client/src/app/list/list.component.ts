@@ -1,5 +1,4 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
-import { formatNumber } from '@angular/common';
 import { ApiService, TankMap } from '../common/api.service';
 import { pb } from '../../pb';
 import { MatrixComponent, Data } from '../matrix/matrix.component';
@@ -39,8 +38,6 @@ export class ListComponent implements OnInit {
 	lastCopy = 'empty';
 	lastURI = '';
 
-	historyID = 0;
-
 	srcDate = '';
 
 	srcMap: TankMap = {};
@@ -52,6 +49,11 @@ export class ListComponent implements OnInit {
 
 	matrixData: Data[] = [];
 	matrixName = false;
+
+	historyID = 0;
+	historyKey = '';
+	zeroStart = true;
+	tankName = '';
 
 	idx = 1;
 	key = '';
@@ -206,11 +208,13 @@ export class ListComponent implements OnInit {
 		private elementRef: ElementRef,
 	) {
 		this.yKeyList.push(...this.keyList);
-		this.loadSearch();
 	}
 
 	async ngOnInit(): Promise<void> {
 		this.srcMap = await this.api.data();
+		if (!this.init) {
+			this.loadSearch();
+		}
 		this.srcDate = this.api.buildTime;
 		this.src = Object.values(this.srcMap);
 		this.init = true;
@@ -276,6 +280,21 @@ export class ListComponent implements OnInit {
 	clickKey(t: string) {
 		this.key = t;
 		this.select();
+	}
+
+	clickHistoryKey(t: string) {
+		this.historyKey = t;
+		if (t !== 'battle') {
+			this.key = t;
+			this.select();
+		} else {
+			this.updateURI();
+		}
+	}
+
+	clickZeroStart() {
+		this.zeroStart = !this.zeroStart
+		this.updateURI();
 	}
 
 	clickYKey(t: string) {
@@ -344,10 +363,12 @@ export class ListComponent implements OnInit {
 		});
 
 		this.key = this.defaultKey;
+		this.historyKey = this.defaultKey;
 		const key = us.get('key') || us.get('k');
 		for (const row of this.keyList) {
 			if (key === row.id) {
 				this.key = key;
+				this.historyKey = key;
 				break;
 			}
 		}
@@ -375,6 +396,11 @@ export class ListComponent implements OnInit {
 		this.byBattle = !!(us.get('battle') || us.get('b'));
 		this.higher = !(us.get('higher') || us.get('h'));
 		this.matrixName = us.get('mn') !== '0';
+		this.zeroStart = us.get('hz') !== '0';
+		if (us.get('hb') === '1') {
+			this.historyKey = 'battle';
+		}
+		this.history(us.get('hi'));
 	}
 
 	buildURI() {
@@ -405,7 +431,6 @@ export class ListComponent implements OnInit {
 		}
 
 		if (this.key === 'win') {
-			console.log('this.key', this.key, this.yKey);
 			if (this.yKey !== 'battle') {
 				arg.push('y=' + this.yKey);
 			}
@@ -427,6 +452,18 @@ export class ListComponent implements OnInit {
 			arg.push('h=0');
 		}
 
+		if (this.historyID) {
+			arg.push('hi=' + this.historyID);
+		}
+
+		if (this.historyKey === 'battle') {
+			arg.push('hb=1');
+		}
+
+		if (!this.zeroStart) {
+			arg.push('hz=0');
+		}
+
 		if (!this.matrixName) {
 			arg.push('mn=0');
 		}
@@ -435,7 +472,6 @@ export class ListComponent implements OnInit {
 		if (arg.length) {
 			search = '?' + arg.join('&');
 		}
-
 		return search;
 	}
 
@@ -487,7 +523,7 @@ export class ListComponent implements OnInit {
 				numWidth: '0',
 			} as Row;
 
-			this.calcNum(d, o);
+			[o.num, o.numShow] = this.api.statsNum(this.key, d);
 
 			if (maxBattle < o.battle) {
 				maxBattle = o.battle;
@@ -551,48 +587,8 @@ export class ListComponent implements OnInit {
 			return 0;
 		}
 
-		const battle = st.battles;
-		if (!battle) {
-			return 0;
-		}
-
-		switch (key) {
-
-		case 'battle':
-			return battle;
-
-		case 'dmg':
-			return (st.damageDealt || 0) / battle;
-
-		case 'win':
-			return (st.wins || 0) / battle;
-
-		case 'xp':
-			return (st.xp || 0) / battle;
-
-		case 'frag':
-			return (st.frags || 0) / battle;
-
-		case 'spot':
-			return (st.spotted || 0) / battle;
-
-		case 'survived':
-			return (st.survivedBattles || 0) / battle;
-
-		case 'p1':
-			return st.p1 || 0;
-
-		case 'p2':
-			return st.p2 || 0;
-
-		case 'p3':
-			return st.p3 || 0;
-
-		default:
-			console.log('unknown key', key)
-		}
-
-		return 0;
+		const [num, _] = this.api.statsNum(key, st);
+		return num;
 	}
 
 	sort(maxBattle: number, maxNum: number): void {
@@ -627,74 +623,25 @@ export class ListComponent implements OnInit {
 		});
 	}
 
-	history(id: number): void {
-		console.log('history', id);
+	history(id: number|string|null): void {
+		this.tankName = '';
+		this.historyID = 0;
+		if (!id) {
+			return;
+		}
+		if (typeof id != 'number') {
+			id = +id;
+		}
+		const name = this.srcMap[id]?.base?.name;
+		if (!name) {
+			return;
+		}
+		this.tankName = name;
+		this.historyID = id;
 	}
 
-	calcNum(s: pb.ITankStats, r: Row): number {
-
-		let i = 0;
-
-		const b = s.battles || 1;
-
-		let num = 0;
-
-		switch (this.key) {
-
-		case 'dmg':
-			num = s?.damageDealt || 0;
-			r.num = num / b;
-			r.numShow = '' + formatNumber(Math.round(r.num), 'en-US');
-			break;
-
-		case 'win':
-			num = s?.wins || 0;
-			r.num = num / b;
-			r.numShow = (r.num * 100).toFixed(2) + '%';
-			break;
-
-		case 'xp':
-			num = s?.xp || 0;
-			r.num = num / b;
-			r.numShow = '' + formatNumber(Math.round(r.num), 'en-US');
-			break;
-
-		case 'frag':
-			num = s?.frags || 0;
-			r.num = num / b;
-			r.numShow = (r.num).toFixed(2);
-			break;
-
-		case 'spot':
-			num = s?.spotted || 0;
-			r.num = num / b;
-			r.numShow = (r.num).toFixed(2);
-			break;
-
-		case 'survived':
-			const x2 = s?.survivedBattles || 0;
-			r.num = x2 / b;
-			r.numShow = (r.num * 100).toFixed(2) + '%';
-			break;
-
-		case 'p1':
-			r.num = s?.p1 || 0;
-			r.numShow = '' + formatNumber(Math.round(r.num), 'en-US');
-			break;
-
-		case 'p2':
-			r.num = s?.p2 || 0;
-			r.numShow = '' + formatNumber(Math.round(r.num), 'en-US');
-			break;
-
-		case 'p3':
-			r.num = s?.p3 || 0;
-			r.numShow = '' + formatNumber(Math.round(r.num), 'en-US');
-			break;
-
-		default:
-			console.log('unknown key', this.key)
-		}
-		return i;
+	historyClick(id: number) {
+		this.history(id);
+		this.updateURI();
 	}
 }

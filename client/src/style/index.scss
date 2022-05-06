@@ -30,4 +30,24 @@ img.flag {
 	margin-bottom: 0.25rem;
 }
 
+.modal {
+	background-color: rgba(0, 0, 0, 0.8);
+}
+
+.history-text {
+	text-align: center;
+	span {
+		font-weight: bold;
+		display: inline-block;
+		padding-left: 0.5rem;
+		padding-right: 0.5rem;
+		&:nth-of-type(1) {
+			color: green;
+		}
+		&:nth-of-type(2) {
+			color: red;
+		}
+	}
+}
+
 @import "./icon.scss";

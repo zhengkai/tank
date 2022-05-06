@@ -85,34 +85,43 @@
 					</div>
 				</td>
 				<td>
-					<button class="btn btn-sm btn-primary" (click)="history(t.id)">历史</button>
-				</td>
-				<td>
-					<button class="btn btn-sm btn-primary" >tanks.gg</button>
+					<button class="btn btn-sm btn-primary" (click)="historyClick(t.id)">历史</button>
 				</td>
 				<td>
 					<a class="btn btn-sm btn-primary" target="_blank" href="https://wotgame.cn/zh-cn/tankopedia/{{ t.id }}/">参数</a>
 				</td>
+				<!--
+				<td>
+					<button class="btn btn-sm btn-primary" >tanks.gg</button>
+				</td>
+				 -->
 			</tr>
 		</tbody>
 	</table>
 	<app-matrix *ngIf="li.length" [style.display]="tableType === 'matrix' ? 'block' : 'none'" [list]="matrixData" [name]="matrixName"></app-matrix>
 </div>
 
-<div class="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="display: block; background-color: rgba(0, 0, 0, 0.8);">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-		<app-history></app-history>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
+<div class="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" [style.display]="historyID ? 'block' : 'none'">
+	<div class="modal-dialog modal-xl">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">{{ tankName }} 历史数据</h5>
+				<button (click)="historyClick(0)" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="row mb-4">
+					<div class="col-auto btn-group" role="group">
+						<button [disabled]="!init || null" *ngFor="let t of yKeyList" (click)="clickHistoryKey(t.id)" type="button" class="btn {{ historyKey === t.id ? 'btn-primary' : 'btn-outline-primary' }}">{{ t.name }}</button>
+					</div>
+					<div class="col-auto">
+						<button [disabled]="!init || null" (click)="clickHigher()" type="button" class="btn {{ higher ? 'btn-primary' : 'btn-outline-primary' }}" title="战斗力前 35% 的玩家">老车长</button>
+					</div>
+					<div class="col-auto">
+						<button (click)="clickZeroStart()" class="btn {{ zeroStart ? 'btn-primary' : 'btn-outline-primary' }}">零起始</button>
+					</div>
+				</div>
+				<app-history [key]="historyKey" [higher]="higher" [tankID]="historyID" [zeroStart]="zeroStart"></app-history>
+			</div>
+		</div>
+	</div>
 </div>
