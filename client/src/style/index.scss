@@ -42,10 +42,10 @@ img.flag {
 		padding-left: 0.5rem;
 		padding-right: 0.5rem;
 		&:nth-of-type(1) {
-			color: green;
+			color: #008000;
 		}
 		&:nth-of-type(2) {
-			color: red;
+			color: #ff0000;
 		}
 	}
 }

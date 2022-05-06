@@ -53,6 +53,9 @@ export class ApiService {
 		});
 	}
 
+	historyExists(tankID: number): boolean {
+		return !!this.historyCache[tankID];
+	}
 	async history(tankID: number): Promise<pb.TankStatHistory|null> {
 
 		if (!tankID) {

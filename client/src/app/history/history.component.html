@@ -1,4 +1,6 @@
 <p *ngIf="max && min" class="history-text">Max at {{ max.date.toISOString().substring(0, 10) }}: <span>{{ max.numShow }}</span>,
 Min at {{ min.date.toISOString().substring(0, 10) }}: <span>{{ min.numShow }}</span></p>
 
+<p *ngIf="loading" class="mt-5 mb-5 text-center">loading ...</p>
+
 <div #box></div>

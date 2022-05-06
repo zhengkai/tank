@@ -25,6 +25,7 @@ export class HistoryComponent implements OnChanges {
 
 	max: Data|null = null;
 	min: Data|null = null;
+	loading = false;
 
 	serial = 0;
 	svg: any = null;
@@ -47,9 +48,19 @@ export class HistoryComponent implements OnChanges {
 	}
 
 	async chart(): Promise<void> {
+
 		this.serial++;
 		const serial = this.serial;
+
+		if (!this.api.historyExists(this.tankID)) {
+			this.max = null;
+			this.min = null;
+			this.svg?.remove();
+			this.loading = true;
+		}
 		const re = await this.api.history(this.tankID);
+		this.loading = false;
+
 		if (serial !== this.serial) {
 			console.log('skip', serial)
 			return;
