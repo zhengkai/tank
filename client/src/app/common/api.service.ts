@@ -3,6 +3,7 @@ import { formatNumber } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { pb } from '../../pb';
+import { tanksgg } from './tanksgg';
 
 export type TankMap = { [key: number]: pb.ITank }
 
@@ -15,6 +16,7 @@ export class ApiService {
 	src: TankMap = {};
 
 	historyCache: { [key: number]: pb.TankStatHistory } = {};
+	tanksgg: { [key: number]: string } = {};
 
 	buildTime = '';
 
@@ -27,8 +29,9 @@ export class ApiService {
 	constructor(
 		private httpClient: HttpClient,
 	) {
-
 		console.log('writen by zhengkai https://soulogic.com');
+
+		this.tanksgg = tanksgg;
 
 		(async () => {
 			await this.list();

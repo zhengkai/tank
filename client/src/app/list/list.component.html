@@ -85,16 +85,14 @@
 					</div>
 				</td>
 				<td>
-					<button class="btn btn-sm btn-primary" (click)="historyClick(t.id)">历史</button>
+					<button class="btn btn-sm btn-secondary" (click)="historyClick(t.id)">历史</button>
 				</td>
 				<td class="extra">
-					<a class="btn btn-sm btn-primary" target="_blank" href="https://wotgame.cn/zh-cn/tankopedia/{{ t.id }}/">参数</a>
+					<a href="https://wotgame.cn/zh-cn/tankopedia/{{ t.id }}/" target="_blank" class="btn btn-sm btn-secondary">参数</a>
 				</td>
-				<!--
-				<td>
-					<button class="btn btn-sm btn-primary" >tanks.gg</button>
+				<td class="extra">
+					<a *ngIf="api.tanksgg[t.id]" href="https://tanks.gg/tank/{{ api.tanksgg[t.id] }}" target="_blank" class="btn btn-sm btn-secondary">tanks.gg</a>
 				</td>
-				 -->
 			</tr>
 		</tbody>
 	</table>

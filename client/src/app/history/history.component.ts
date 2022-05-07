@@ -25,6 +25,7 @@ export class HistoryComponent implements OnChanges {
 
 	max: Data|null = null;
 	min: Data|null = null;
+	median: Data|null = null;
 	loading = false;
 
 	serial = 0;
@@ -99,26 +100,18 @@ export class HistoryComponent implements OnChanges {
 		return re;
 	}
 
-	draw(aapl: Data[]) {
+	draw(data: Data[]) {
 
-		if (!aapl.length) {
+		if (!data.length) {
 			return;
 		}
 
-		const sort = aapl.slice().sort((a, b) => {
-			let d = (a?.num || 0) - (b?.num || 0);
-			if (!d) {
-				d = (+a?.date || 0) - (+b?.date || 0);
-			}
-			return d;
-		})
-		this.min = sort[0];
-		this.max = sort.pop() || null;
+		this.text(data);
 
-		const X = d3.map(aapl, v => new Date(v.date));
-		const Y = d3.map(aapl, v => v.num);
+		const X = d3.map(data, v => new Date(v.date));
+		const Y = d3.map(data, v => v.num);
 		const I = d3.range(X.length);
-		const D = d3.map(aapl, v => !!v?.num);
+		const D = d3.map(data, v => !!v?.num);
 
 		const width = this.box.nativeElement.offsetWidth;
 		const height = 500;
@@ -157,25 +150,29 @@ export class HistoryComponent implements OnChanges {
 		.x((_, i) => xScale(X[i]))
 		.y((_, i) => yScale(Y[i]));
 
-		const li = line(aapl.map(v => [+v.date, v.num]));
+		const li = line(data.map(v => [+v.date, v.num]));
 		const svg = d3.select(this.box.nativeElement).append('svg');
 		if (this.svg) {
 			this.svg.remove();
 		}
 		this.svg = svg;
 
-		this.tooltip = svg.append("g").style("pointer-events", "none");
-
 		svg.attr("width", width)
 		.attr("height", height)
 		.attr("viewBox", [0, 0, width, height])
 		.attr("style", "max-width: 100%; height: auto; height: intrinsic;")
       	.on("pointerenter pointermove", (event: PointerEvent) => {
+
 			const d = xScale.invert(d3.pointer(event)[0]);
 			const i = d3.bisectCenter(X, d);
-			this.pointermoved(event, aapl[i]);
+
+			const x = Math.round(xScale(X[i])) - 0.5;
+			const y = yScale(Y[i]) + 5;
+
+			console.log(x, y);
+			this.pointermoved(event, data[i]);
 			this.tooltip.style("display", null)
-			.attr("transform", `translate(${xScale(X[i])},${yScale(Y[i])})`);
+				.attr("transform", `translate(${x},${y})`);
 			this.svg.property("value", I[i]).dispatch("input", {bubbles: true});
 		})
 		.on("pointerleave", () => {
@@ -204,6 +201,16 @@ export class HistoryComponent implements OnChanges {
 			.attr("stroke-linejoin", 'round')
 			.attr("stroke-opacity", 1)
 			.attr("d", li);
+
+		this.tooltip = svg.append("g").style("pointer-events", "none");
+		this.tooltip
+			.append('line')
+    		.style("stroke", "rgba(0, 128, 128, 0.5)")
+    		.style("stroke-width", 3)
+    		.attr("x1", 0)
+    		.attr("y1", -1000)
+    		.attr("x2", 0)
+    		.attr("y2", 1000);
 	}
 
 	pointermoved(event: PointerEvent, r: Data) {
@@ -229,5 +236,18 @@ export class HistoryComponent implements OnChanges {
 		const {x, y, width: w, height: h} = text.node().getBBox();
 		text.attr("transform", `translate(${-w / 2},${15 - y})`);
 		path.attr("d", `M${-w / 2 - 10},5H-5l5,-5l5,5H${w / 2 + 10}v${h + 20}h-${w + 20}z`);
+	}
+
+	text(data: Data[]) {
+		const sort = data.slice().sort((a, b) => {
+			let d = (a?.num || 0) - (b?.num || 0);
+			if (!d) {
+				d = (+a?.date || 0) - (+b?.date || 0);
+			}
+			return d;
+		})
+		this.min = sort[0];
+		this.median = sort[Math.round(sort.length / 2)];
+		this.max = sort.pop() || null;
 	}
 }

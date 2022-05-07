@@ -1,6 +1,8 @@
-<p *ngIf="max && min" class="history-text mt-2">Max at {{ max.date.toISOString().substring(0, 10) }}: <span>{{ max.numShow }}</span>,
-Min at {{ min.date.toISOString().substring(0, 10) }}: <span>{{ min.numShow }}</span></p>
+<p *ngIf="max && min" class="history-text mt-2">最高 {{ max.date.toISOString().substring(0, 10) }}: <span>{{ max.numShow }}</span>
+最低 {{ min.date.toISOString().substring(0, 10) }}: <span>{{ min.numShow }}</span>
+中位数 {{ median?.date?.toISOString()?.substring(0, 10) }}: <span>{{ median?.numShow }}</span>
+</p>
 
 <p *ngIf="loading" class="mt-5 mb-5 text-center">loading ...</p>
 
-<div #box></div>
+<div #box class="no-select"></div>
