@@ -31,6 +31,12 @@ export class ApiService {
 	) {
 		console.log('writen by zhengkai https://soulogic.com');
 
+		for (const k of Object.keys(tanksgg)) {
+			const v = tanksgg[+k];
+			if (v && v?.startsWith('#')) {
+				delete tanksgg[+k];
+			}
+		}
 		this.tanksgg = tanksgg;
 
 		(async () => {
@@ -110,6 +116,7 @@ export class ApiService {
 				}
 				this.src[id] = v;
 			}
+			// console.log(`${id}: "#${(v?.base?.name || '').replace(/('|")/g, '')}",`);
 			if (v?.base?.shop === pb.TankEnum.shop.Premium) {
 				v.base.shop = pb.TankEnum.shop.Gold;
 			}
