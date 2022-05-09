@@ -27,6 +27,19 @@ func InitMap() {
 	}
 }
 
+// LoadID ...
+func LoadID() (li []uint32) {
+
+	Mux.Lock()
+	defer Mux.Unlock()
+
+	li = make([]uint32, 0, len(mapBase))
+	for i := range mapBase {
+		li = append(li, i)
+	}
+	return
+}
+
 func initPercentPool(id uint32) {
 	p1, p2, p3, err := db.GetPercent(id)
 	if err != nil {

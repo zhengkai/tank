@@ -13,7 +13,7 @@ func Dev() {
 
 	zj.J(`dev start`)
 
-	wiki.Test()
+	wiki.Run()
 
 	// tank.Date()
 	// tank.BuildHistory()

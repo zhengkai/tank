@@ -105,3 +105,13 @@ message TankStats {
 	uint64 shots = 14;
 	uint64 damage_dealt = 15;
 }
+
+message TankAliasList {
+	repeated TankAlias list = 1;
+}
+
+message TankAlias {
+	uint32 ID = 1;
+	string wiki = 2;
+	string tanksgg = 3;
+}

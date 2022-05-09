@@ -3,6 +3,7 @@ package cron
 import (
 	"project/spider"
 	"project/tank"
+	"project/wiki"
 	"strconv"
 	"time"
 
@@ -69,6 +70,8 @@ func history() {
 		}
 
 		tank.BuildHistory()
+
+		wiki.Run()
 
 		time.Sleep(time.Minute * 10)
 	}

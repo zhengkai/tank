@@ -1,6 +1,7 @@
 package tank
 
 import (
+	"project/db"
 	"project/pb"
 )
 
@@ -15,6 +16,8 @@ func Basic(raw *pb.TankRaw) (tb *pb.TankBase, err error) {
 		Type:   getTankType(raw.TankType),
 		Shop:   getTankShop(raw.TankSort),
 	}
+
+	db.SIDIcon(raw.TankId, raw.TankIcon)
 
 	err = poolUpdate(tb)
 	return

@@ -2,15 +2,12 @@ package tank
 
 import (
 	"fmt"
-	"io/ioutil"
 	"project/config"
 	"project/db"
 	"project/pb"
+	"project/util"
 	"project/zj"
 	"strconv"
-
-	"github.com/zhengkai/zu"
-	"google.golang.org/protobuf/proto"
 )
 
 // Build ...
@@ -71,39 +68,7 @@ func Build() (err error) {
 		tl.BuildTime = sdi + `-` + sdx
 	}
 
-	ab, err := proto.Marshal(tl)
-	if err != nil {
-		return
-	}
-
-	file := File()
-
-	buildWriteFile(file, ab)
-
-	zj.J(`build`, file, len(ab), len(tl.List))
-
-	return
-}
-
-func buildWriteFile(file string, ab []byte) (err error) {
-
-	defer zj.Watch(&err)
-
-	err = ioutil.WriteFile(file, ab, 0666)
-	if err != nil {
-		return
-	}
-
-	err = zu.Brotli(file)
-	if err != nil {
-		return
-	}
-
-	err = zu.Gzip(file)
-	if err != nil {
-		return
-	}
-
+	util.WriteFile(File(), tl)
 	return
 }
 

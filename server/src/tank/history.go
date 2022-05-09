@@ -5,10 +5,9 @@ import (
 	"project/config"
 	"project/db"
 	"project/pb"
+	"project/util"
 	"project/zj"
 	"time"
-
-	"google.golang.org/protobuf/proto"
 )
 
 // BuildHistory ...
@@ -22,7 +21,9 @@ func BuildHistory() (err error) {
 	return
 }
 
-func historyOne(id uint32) {
+func historyOne(id uint32) (err error) {
+
+	defer zj.Watch(&err)
 
 	m := db.GetPercentRange(id)
 
@@ -54,12 +55,9 @@ func historyOne(id uint32) {
 		List:   li,
 	}
 
-	ab, err := proto.Marshal(d)
-	if err != nil {
-		return
-	}
-
 	file := fmt.Sprintf(`%s/history/%d.pb`, config.OutputPath, id)
-	buildWriteFile(file, ab)
 	zj.J(file)
+
+	util.WriteFile(file, d)
+	return
 }
