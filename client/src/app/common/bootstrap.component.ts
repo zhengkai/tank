@@ -10,16 +10,10 @@ import { ApiService } from '../common/api.service';
 export class BootstrapComponent {
 	title = 'Tank';
 	prod = false;
-	init = false;
 
 	constructor(
 		public api: ApiService,
 	) {
 		this.prod = environment.production;
-
-		(async () => {
-			await api.data();
-			this.init = true;
-		})();
 	}
 }

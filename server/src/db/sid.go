@@ -48,7 +48,7 @@ func SIDWikiList() (m map[uint32]*pb.TankAlias, err error) {
 
 	m = make(map[uint32]*pb.TankAlias)
 
-	query := `SELECT tank_id, wiki, gg FROM sid`
+	query := `SELECT tank_id, wiki, gg, icon FROM sid`
 	r, err := d.Query(query)
 	if err != nil {
 		return
@@ -57,7 +57,7 @@ func SIDWikiList() (m map[uint32]*pb.TankAlias, err error) {
 
 	for r.Next() {
 		row := &pb.TankAlias{}
-		err = r.Scan(&row.ID, &row.Wiki, &row.Tanksgg)
+		err = r.Scan(&row.ID, &row.Wiki, &row.Tanksgg, &row.Icon)
 		if err != nil {
 			return
 		}

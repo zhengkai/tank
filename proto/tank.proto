@@ -114,4 +114,5 @@ message TankAlias {
 	uint32 ID = 1;
 	string wiki = 2;
 	string tanksgg = 3;
+	string icon = 4;
 }

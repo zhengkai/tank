@@ -41,7 +41,7 @@ export class MatrixComponent implements OnChanges {
 		public api: ApiService,
 	) {
 		(async () => {
-			this.srcMap = await api.data();
+			this.srcMap = await api.list();
 			if (!this.ready) {
 				this.ngOnChanges();
 			}

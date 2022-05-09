@@ -211,7 +211,7 @@ export class ListComponent implements OnInit {
 	}
 
 	async ngOnInit(): Promise<void> {
-		this.srcMap = await this.api.data();
+		this.srcMap = await this.api.list();
 		if (!this.init) {
 			this.loadSearch();
 		}
@@ -550,6 +550,7 @@ export class ListComponent implements OnInit {
 			this.matrix();
 		}
 
+		console.log('update select');
 		this.updateURI();
 	}
 
