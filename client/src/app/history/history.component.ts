@@ -202,7 +202,10 @@ export class HistoryComponent implements OnChanges {
 			.attr("stroke-opacity", 1)
 			.attr("d", li);
 
-		this.tooltip = svg.append("g").style("pointer-events", "none");
+		this.tooltip = svg.append("g")
+			.style("pointer-events", "none")
+			.style("display", "none");
+
 		this.tooltip
 			.append('line')
     		.style("stroke", "rgba(0, 128, 128, 0.5)")

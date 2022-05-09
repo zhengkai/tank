@@ -31,12 +31,29 @@ export class ApiService {
 	) {
 		console.log('writen by zhengkai https://soulogic.com');
 
+		/*
 		for (const k of Object.keys(tanksgg)) {
 			const v = tanksgg[+k];
 			if (v && v?.startsWith('#')) {
 				delete tanksgg[+k];
 			}
 		}
+		 */
+		tanksgg[15185] = 'chieftain';
+		tanksgg[21537] = 'm-v-y';
+		tanksgg[21281] = 'm-vi-y';
+		tanksgg[21025] = 'm-iii-y';
+		tanksgg[20769] = 'm-ii-y';
+		tanksgg[20513] = 'pawlack-tank';
+		tanksgg[57633] = 't71-cmcd-p';
+		tanksgg[62017] = 'amx-m4-51-fl';
+		tanksgg[32001] = 'obj-780';
+		tanksgg[16913] = 'wt-e-100-mod';
+		tanksgg[33281] = 't-34-1941';
+		tanksgg[34593] = 't3-convert';
+		tanksgg[25617] = 'vk-2801-105';
+		tanksgg[55377] = 'a46';
+		tanksgg[59169] = 't26e5-p';
 		this.tanksgg = tanksgg;
 
 		(async () => {

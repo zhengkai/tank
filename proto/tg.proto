@@ -1,0 +1,14 @@
+syntax = "proto3";
+option go_package = "/pb";
+package pb;
+
+message TGList {
+	repeated TGRow tanks = 1;
+	string version = 2;
+}
+
+message TGRow {
+	string id = 1;
+	string name = 2;
+	string slug = 3;
+}
