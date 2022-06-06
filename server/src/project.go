@@ -5,7 +5,6 @@ import (
 	"project/tank"
 	"project/wiki"
 	"project/zj"
-	"time"
 )
 
 // Dev ...
@@ -17,8 +16,6 @@ func Dev() {
 
 	tank.Build()
 	wiki.Run()
-
-	zj.J(time.Now().Format(`1504`))
 
 	// tank.Date()
 	// tank.BuildHistory()

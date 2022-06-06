@@ -27,8 +27,9 @@ func defaultSID() {
 	db.SIDWiki(25617, `G158_VK2801_105_SPXXI`)
 	db.SIDWiki(55377, `GB108_A46`)
 	db.SIDWiki(59169, `A117_T26E5_Patriot`)
-	db.SIDWiki(60529, `Cz20_ShPTK_TVP_100_mm`)
 }
+
+var ignoreSID = []uint32{50721, 64769, 48145, 62001, 59217}
 
 // SID ...
 func SID(id uint32) (sid string, err error) {
@@ -36,6 +37,11 @@ func SID(id uint32) (sid string, err error) {
 	if id < 1 {
 		err = errors.New(`empty id`)
 		return
+	}
+	for _, v := range ignoreSID {
+		if v == id {
+			return
+		}
 	}
 
 	defer zj.Watch(&err)

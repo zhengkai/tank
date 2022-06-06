@@ -59,15 +59,13 @@ export class ApiService {
 		this.buildTime = rsp.buildTime;
 		rsp.list?.forEach(v => {
 			const id = v?.base?.ID || 0;
-			if (id) {
-				if (ignoreList.includes(id)) {
-					return;
-				}
-				if (id === 16913 && v?.base) {
-					v.base.shop = 2;
-				}
-				this.src[id] = v;
+			if (!id || ignoreList.includes(id)) {
+				return;
 			}
+			if (id === 16913 && v?.base) {
+				v.base.shop = 2;
+			}
+			this.src[id] = v;
 			if (v?.base?.shop === pb.TankEnum.shop.Premium) {
 				v.base.shop = pb.TankEnum.shop.Gold;
 			}

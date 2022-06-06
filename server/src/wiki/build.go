@@ -1,6 +1,8 @@
 package wiki
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"project/config"
 	"project/db"
 	"project/pb"
@@ -50,5 +52,11 @@ func build() (err error) {
 
 	file := config.OutputPath + `/id.pb`
 	util.WriteFile(file, out)
+
+	ab, err := json.MarshalIndent(out, ``, "\t")
+	if err == nil {
+		ioutil.WriteFile(config.OutputPath+`/id.json`, ab, 0666)
+	}
+
 	return
 }
