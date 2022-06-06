@@ -10,7 +10,7 @@ import (
 	"project/zj"
 )
 
-var tgURL = `https://tanks.gg/api/v11610/list`
+var tgURL = `https://tanks.gg/api/list`
 
 type tgMap map[string]*pb.TGRow
 

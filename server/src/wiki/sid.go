@@ -27,6 +27,7 @@ func defaultSID() {
 	db.SIDWiki(25617, `G158_VK2801_105_SPXXI`)
 	db.SIDWiki(55377, `GB108_A46`)
 	db.SIDWiki(59169, `A117_T26E5_Patriot`)
+	db.SIDWiki(60529, `Cz20_ShPTK_TVP_100_mm`)
 }
 
 // SID ...

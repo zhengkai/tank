@@ -52,7 +52,3 @@ func build() (err error) {
 	util.WriteFile(file, out)
 	return
 }
-
-func writeFile(a *pb.TankAliasList) {
-
-}

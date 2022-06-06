@@ -22,6 +22,9 @@ func InitMap() {
 	}
 
 	for _, v := range list {
+		if v.ID == 60529 {
+			zj.J(v)
+		}
 		mapBase[v.ID] = v
 		initPercentPool(v.ID)
 	}

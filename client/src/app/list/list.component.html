@@ -84,13 +84,13 @@
 						<div class="battle" style="width: {{ t.battleWidth }}"></div>
 					</div>
 				</td>
-				<td>
+				<td class="extra">
 					<button class="btn btn-sm btn-secondary" (click)="historyClick(t.id)">历史</button>
 				</td>
 				<td class="extra">
 					<a href="https://wotgame.cn/zh-cn/tankopedia/{{ t.id }}/" target="_blank" class="btn btn-sm btn-secondary">参数</a>
 				</td>
-				<td class="extra">
+				<td>
 					<a *ngIf="api.tanksgg[t.id]" href="https://tanks.gg/tank/{{ api.tanksgg[t.id] }}" target="_blank" class="btn btn-sm btn-secondary">tanks.gg</a>
 				</td>
 			</tr>

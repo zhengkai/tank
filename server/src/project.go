@@ -2,8 +2,10 @@ package project
 
 import (
 	"project/cron"
+	"project/tank"
 	"project/wiki"
 	"project/zj"
+	"time"
 )
 
 // Dev ...
@@ -13,7 +15,10 @@ func Dev() {
 
 	zj.J(`dev start`)
 
+	tank.Build()
 	wiki.Run()
+
+	zj.J(time.Now().Format(`1504`))
 
 	// tank.Date()
 	// tank.BuildHistory()

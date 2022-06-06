@@ -97,6 +97,9 @@ export class HistoryComponent implements OnChanges {
 			} as Data;
 			re.push(o);
 		}
+
+		// console.log('st', this.key, this.higher, re.length);
+
 		return re;
 	}
 
@@ -169,7 +172,7 @@ export class HistoryComponent implements OnChanges {
 			const x = Math.round(xScale(X[i])) - 0.5;
 			const y = yScale(Y[i]) + 5;
 
-			console.log(x, y);
+			// console.log('x =', i, x);
 			this.pointermoved(event, data[i]);
 			this.tooltip.style("display", null)
 				.attr("transform", `translate(${x},${y})`);

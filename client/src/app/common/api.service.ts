@@ -8,6 +8,11 @@ import { ZCache } from './cache';
 export type TankMap = { [key: number]: pb.ITank }
 export type IDMap = { [key: number]: pb.TankAlias }
 
+// 数量太少而不展示的车
+const ignoreList = [
+	48641, // 252工程U 防卫者
+];
+
 @Injectable({
 	providedIn: 'root'
 })
@@ -55,6 +60,9 @@ export class ApiService {
 		rsp.list?.forEach(v => {
 			const id = v?.base?.ID || 0;
 			if (id) {
+				if (ignoreList.includes(id)) {
+					return;
+				}
 				if (id === 16913 && v?.base) {
 					v.base.shop = 2;
 				}
