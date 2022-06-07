@@ -56,8 +56,6 @@ func historyOne(id uint32) (err error) {
 	}
 
 	file := fmt.Sprintf(`%s/history/%d.pb`, config.OutputPath, id)
-	zj.J(file)
-
 	util.WriteFile(file, d)
 	return
 }

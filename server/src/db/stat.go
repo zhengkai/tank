@@ -128,6 +128,9 @@ func LoadTankRecentStats(id uint32) (list []*pb.TankStatDate, err error) {
 	var def []byte
 	var hi []byte
 
+	list = make([]*pb.TankStatDate, 100)
+
+	i := 100
 	for row.Next() {
 
 		d := &pb.TankStatDate{}
@@ -153,8 +156,11 @@ func LoadTankRecentStats(id uint32) (list []*pb.TankStatDate, err error) {
 			}
 			d.StatsHigher = st
 		}
-		list = append(list, d)
+
+		i--
+		list[i] = d
 	}
 
+	list = list[i:]
 	return
 }

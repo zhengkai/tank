@@ -78,7 +78,7 @@ export class HistoryComponent implements OnChanges {
 		}
 
 		const re: Data[] = [];
-		for (const a of li.reverse()) {
+		for (const a of li) {
 			let t = '' + a?.date;
 
 			const st = this.higher ? a.statsHigher : a.stats;
@@ -98,7 +98,11 @@ export class HistoryComponent implements OnChanges {
 			re.push(o);
 		}
 
-		// console.log('st', this.key, this.higher, re.length);
+		re.sort((a, b) => {
+			const ia = +(a?.date || 0);
+			const ib = +(b?.date || 0);
+			return ia - ib;
+		})
 
 		return re;
 	}
@@ -172,7 +176,6 @@ export class HistoryComponent implements OnChanges {
 			const x = Math.round(xScale(X[i])) - 0.5;
 			const y = yScale(Y[i]) + 5;
 
-			// console.log('x =', i, x);
 			this.pointermoved(event, data[i]);
 			this.tooltip.style("display", null)
 				.attr("transform", `translate(${x},${y})`);
