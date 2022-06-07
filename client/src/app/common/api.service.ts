@@ -11,6 +11,8 @@ export type IDMap = { [key: number]: pb.TankAlias }
 // 数量太少而不展示的车
 const ignoreList = [
 	48641, // 252工程U 防卫者
+	16913, // 百运
+	32001, // 780工程
 ];
 
 @Injectable({
