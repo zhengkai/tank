@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { formatNumber } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
 import { pb } from '../../pb';
 import { ZCache } from './cache';
 
@@ -16,7 +15,7 @@ const ignoreList = [
 ];
 
 @Injectable({
-	providedIn: 'root'
+	providedIn: 'root',
 })
 export class ApiService {
 
@@ -130,56 +129,56 @@ export class ApiService {
 
 			case 'dmg':
 				num = (s?.damageDealt || 0) / b;
-			show = '' + formatNumber(Math.round(num), 'en-US');
-			break;
+				show = '' + formatNumber(Math.round(num), 'en-US');
+				break;
 
 			case 'win':
 				num = (s?.wins || 0) / b;
-			show = (num * 100).toFixed(2) + '%';
-			break;
+				show = (num * 100).toFixed(2) + '%';
+				break;
 
 			case 'xp':
 				num = (s?.xp || 0) / b;
-			show = '' + formatNumber(Math.round(num), 'en-US');
-			break;
+				show = '' + formatNumber(Math.round(num), 'en-US');
+				break;
 
 			case 'frag':
 				num = (s?.frags || 0) / b;
-			show = num.toFixed(2);
-			break;
+				show = num.toFixed(2);
+				break;
 
 			case 'spot':
 				num = (s?.spotted || 0) / b;
-			show = num.toFixed(2);
-			break;
+				show = num.toFixed(2);
+				break;
 
 			case 'survived':
 				num = (s?.survivedBattles || 0) / b;
-			show = (num * 100).toFixed(2) + '%';
-			break;
+				show = (num * 100).toFixed(2) + '%';
+				break;
 
 			case 'p1':
 				num = s?.p1 || 0;
-			show = '' + formatNumber(Math.round(num), 'en-US');
-			break;
+				show = '' + formatNumber(Math.round(num), 'en-US');
+				break;
 
 			case 'p2':
 				num = s?.p2 || 0;
-			show = '' + formatNumber(Math.round(num), 'en-US');
-			break;
+				show = '' + formatNumber(Math.round(num), 'en-US');
+				break;
 
 			case 'p3':
 				num = s?.p3 || 0;
-			show = '' + formatNumber(Math.round(num), 'en-US');
-			break;
+				show = '' + formatNumber(Math.round(num), 'en-US');
+				break;
 
 			case 'battle':
 				num = s?.battles || 0;
-			show = '' + formatNumber(num, 'en-US');
-			break;
+				show = '' + formatNumber(num, 'en-US');
+				break;
 
 			default:
-				console.log('unknown key', key)
+				console.log('unknown key', key);
 		}
 		return [num, show];
 	}
