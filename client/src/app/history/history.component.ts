@@ -98,12 +98,6 @@ export class HistoryComponent implements OnChanges {
 			re.push(o);
 		}
 
-		re.sort((a, b) => {
-			const ia = +(a?.date || 0);
-			const ib = +(b?.date || 0);
-			return ia - ib;
-		})
-
 		return re;
 	}
 
