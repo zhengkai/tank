@@ -51,7 +51,7 @@ export class ZCache {
 
 		// await new Promise(resolve => setTimeout(resolve, 5000));
 
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve) => {
 			this.cbList.push(() => {
 				resolve(this.src);
 			});

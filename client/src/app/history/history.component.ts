@@ -12,7 +12,7 @@ export interface Data {
 @Component({
 	selector: 'app-history',
 	templateUrl: './history.component.html',
-	styleUrls: ['./history.component.scss']
+	styleUrls: ['./history.component.scss'],
 })
 export class HistoryComponent implements OnChanges {
 
@@ -37,7 +37,7 @@ export class HistoryComponent implements OnChanges {
 	) {
 	}
 
-	ngAfterViewInit() {
+	AfterViewInit() {
 		this.ngOnChanges();
 	}
 
@@ -63,7 +63,7 @@ export class HistoryComponent implements OnChanges {
 		this.loading = false;
 
 		if (serial !== this.serial) {
-			console.log('skip', serial)
+			console.log('skip', serial);
 			return;
 		}
 		const d = this.transData(re);
@@ -79,7 +79,7 @@ export class HistoryComponent implements OnChanges {
 
 		const re: Data[] = [];
 		for (const a of li) {
-			let t = '' + a?.date;
+			const t = '' + a?.date;
 
 			const st = this.higher ? a.statsHigher : a.stats;
 			if (!st) {
@@ -112,7 +112,6 @@ export class HistoryComponent implements OnChanges {
 		const X = d3.map(data, v => new Date(v.date));
 		const Y = d3.map(data, v => v.num);
 		const I = d3.range(X.length);
-		const D = d3.map(data, v => !!v?.num);
 
 		const width = this.box.nativeElement.offsetWidth;
 		const height = 500;
@@ -147,9 +146,9 @@ export class HistoryComponent implements OnChanges {
 
 		// Construct a line generator.
 		const line = d3.line()
-		.curve(d3.curveLinear)
-		.x((_, i) => xScale(X[i]))
-		.y((_, i) => yScale(Y[i]));
+			.curve(d3.curveLinear)
+			.x((_, i) => xScale(X[i]))
+			.y((_, i) => yScale(Y[i]));
 
 		const li = line(data.map(v => [+v.date, v.num]));
 		const svg = d3.select(this.box.nativeElement).append('svg');
@@ -158,87 +157,87 @@ export class HistoryComponent implements OnChanges {
 		}
 		this.svg = svg;
 
-		svg.attr("width", width)
-		.attr("height", height)
-		.attr("viewBox", [0, 0, width, height])
-		.attr("style", "max-width: 100%; height: auto; height: intrinsic;")
-      	.on("pointerenter pointermove", (event: PointerEvent) => {
+		svg.attr('width', width)
+			.attr('height', height)
+			.attr('viewBox', [0, 0, width, height])
+			.attr('style', 'max-width: 100%; height: auto; height: intrinsic;')
+			.on('pointerenter pointermove', (event: PointerEvent) => {
 
-			const d = xScale.invert(d3.pointer(event)[0]);
-			const i = d3.bisectCenter(X, d);
+				const d = xScale.invert(d3.pointer(event)[0]);
+				const i = d3.bisectCenter(X, d);
 
-			const x = Math.round(xScale(X[i])) - 0.5;
-			const y = yScale(Y[i]) + 5;
+				const x = Math.round(xScale(X[i])) - 0.5;
+				const y = yScale(Y[i]) + 5;
 
-			this.pointermoved(event, data[i]);
-			this.tooltip.style("display", null)
-				.attr("transform", `translate(${x},${y})`);
-			this.svg.property("value", I[i]).dispatch("input", {bubbles: true});
-		})
-		.on("pointerleave", () => {
-    		this.tooltip.style("display", "none");
-    		this.svg.node().value = null;
-    		this.svg.dispatch("input", {bubbles: true});
-		})
+				this.pointermoved(event, data[i]);
+				this.tooltip.style('display', null)
+					.attr('transform', `translate(${x},${y})`);
+				this.svg.property('value', I[i]).dispatch('input', { bubbles: true });
+			})
+			.on('pointerleave', () => {
+				this.tooltip.style('display', 'none');
+				this.svg.node().value = null;
+				this.svg.dispatch('input', { bubbles: true });
+			});
 
-		svg.append("g")
-		.attr("transform", `translate(0,${height - marginBottom})`)
-		.call(xAxis);
+		svg.append('g')
+			.attr('transform', `translate(0,${height - marginBottom})`)
+			.call(xAxis);
 
-		svg.append("g")
-		.attr("transform", `translate(${marginLeft},0)`)
-		.call(yAxis)
-		.call(g => g.select(".domain").remove())
-		.call(g => g.selectAll(".tick line").clone()
-			.attr("x2", width - marginLeft - marginRight)
-			.attr("stroke-opacity", 0.1))
+		svg.append('g')
+			.attr('transform', `translate(${marginLeft},0)`)
+			.call(yAxis)
+			.call(g => g.select('.domain').remove())
+			.call(g => g.selectAll('.tick line').clone()
+				.attr('x2', width - marginLeft - marginRight)
+				.attr('stroke-opacity', 0.1));
 
-		svg.append("path")
-			.attr("fill", "none")
-			.attr("stroke", 'currentColor')
-			.attr("stroke-width", 1.5)
-			.attr("stroke-linecap", 'round')
-			.attr("stroke-linejoin", 'round')
-			.attr("stroke-opacity", 1)
-			.attr("d", li);
+		svg.append('path')
+			.attr('fill', 'none')
+			.attr('stroke', 'currentColor')
+			.attr('stroke-width', 1.5)
+			.attr('stroke-linecap', 'round')
+			.attr('stroke-linejoin', 'round')
+			.attr('stroke-opacity', 1)
+			.attr('d', li);
 
-		this.tooltip = svg.append("g")
-			.style("pointer-events", "none")
-			.style("display", "none");
+		this.tooltip = svg.append('g')
+			.style('pointer-events', 'none')
+			.style('display', 'none');
 
 		this.tooltip
 			.append('line')
-    		.style("stroke", "rgba(0, 128, 128, 0.5)")
-    		.style("stroke-width", 3)
-    		.attr("x1", 0)
-    		.attr("y1", -1000)
-    		.attr("x2", 0)
-    		.attr("y2", 1000);
+			.style('stroke', 'rgba(0, 128, 128, 0.5)')
+			.style('stroke-width', 3)
+			.attr('x1', 0)
+			.attr('y1', -1000)
+			.attr('x2', 0)
+			.attr('y2', 1000);
 	}
 
 	pointermoved(event: PointerEvent, r: Data) {
 
-		const path = this.tooltip.selectAll("path")
-			.data([,])
-			.join("path")
-			.attr("fill", "white")
-			.attr("stroke", "black");
+		const path = this.tooltip.selectAll('path')
+			.data([,]) // eslint-disable-line
+			.join('path')
+			.attr('fill', 'white')
+			.attr('stroke', 'black');
 
-		const text = this.tooltip.selectAll("text")
-			.data([,])
-			.join("text")
+		const text = this.tooltip.selectAll('text')
+			.data([,]) // eslint-disable-line
+			.join('text')
 			.call((text: any) => text
-				.selectAll("tspan")
+				.selectAll('tspan')
 				.data([r.date.toISOString().substring(0, 10), r.numShow])
-				.join("tspan")
-				.attr("x", 0)
-				.attr("y", (_: any, i: number) => `${i * 1.1}em`)
-				.attr("font-weight", (_: any, i: number) => i ? null : "bold")
+				.join('tspan')
+				.attr('x', 0)
+				.attr('y', (_: any, i: number) => `${i * 1.1}em`)
+				.attr('font-weight', (_: any, i: number) => i ? null : 'bold')
 				.text((d: string) => d));
 
-		const {x, y, width: w, height: h} = text.node().getBBox();
-		text.attr("transform", `translate(${-w / 2},${15 - y})`);
-		path.attr("d", `M${-w / 2 - 10},5H-5l5,-5l5,5H${w / 2 + 10}v${h + 20}h-${w + 20}z`);
+		const { y, width: w, height: h } = text.node().getBBox();
+		text.attr('transform', `translate(${-w / 2},${15 - y})`);
+		path.attr('d', `M${-w / 2 - 10},5H-5l5,-5l5,5H${w / 2 + 10}v${h + 20}h-${w + 20}z`);
 	}
 
 	text(data: Data[]) {
@@ -248,7 +247,7 @@ export class HistoryComponent implements OnChanges {
 				d = (+a?.date || 0) - (+b?.date || 0);
 			}
 			return d;
-		})
+		});
 		this.min = sort[0];
 		this.median = sort[Math.round(sort.length / 2)];
 		this.max = sort.pop() || null;

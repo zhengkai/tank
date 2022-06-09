@@ -1,6 +1,5 @@
 import { Component, OnChanges, Input, ElementRef, ViewChild } from '@angular/core';
 import { ApiService, TankMap } from '../common/api.service';
-import { pb } from '../../pb';
 import * as d3 from 'd3';
 
 export interface Data {
@@ -15,7 +14,7 @@ export interface Data {
 @Component({
 	selector: 'app-matrix',
 	templateUrl: './matrix.component.html',
-	styleUrls: ['./matrix.component.scss']
+	styleUrls: ['./matrix.component.scss'],
 })
 export class MatrixComponent implements OnChanges {
 
@@ -48,7 +47,7 @@ export class MatrixComponent implements OnChanges {
 		})();
 	}
 
-	ngAfterViewInit() {
+	AfterViewInit() {
 		if (this.ready) {
 			return;
 		}
@@ -66,7 +65,7 @@ export class MatrixComponent implements OnChanges {
 
 		this.svg = d3.select(this.box.nativeElement).append('svg');
 		this.svg.attr('height', this.size + this.border * 2)
-		.attr('width', this.size + this.border * 3);
+			.attr('width', this.size + this.border * 3);
 	}
 
 	ngOnChanges() {
@@ -102,45 +101,45 @@ export class MatrixComponent implements OnChanges {
 		this.calcData(list);
 
 		const li = this.svg.selectAll('circle')
-		.data(list)
-		.enter()
+			.data(list)
+			.enter();
 
 		if (this.name) {
 			li.append('text')
-			.attr('x', v => v.x + 8)
-			.attr('y', v => v.y + 4)
-			.style('font-size', 12)
-			.style('fill', 'gray')
-			.style('pointer-events', 'none')
-			.text(d => {
-				const t = this.srcMap[d.id]?.base;
-				if (!t) {
-					return '';
-				}
-				return t.name || '';
-			});
+				.attr('x', v => v.x + 8)
+				.attr('y', v => v.y + 4)
+				.style('font-size', 12)
+				.style('fill', 'gray')
+				.style('pointer-events', 'none')
+				.text(d => {
+					const t = this.srcMap[d.id]?.base;
+					if (!t) {
+						return '';
+					}
+					return t.name || '';
+				});
 		}
 
 		const self = this;
 
 		li.append('svg:circle')
-		.attr('cx', v => v.x)
-		.attr('cy', v => v.y)
-		.attr('r', this.radius)
-		.attr('fill', v => d3.schemeCategory10[v.type])
-		.attr('stroke', 'white')
-		.on('mouseover', function (ev, tank) {
+			.attr('cx', v => v.x)
+			.attr('cy', v => v.y)
+			.attr('r', this.radius)
+			.attr('fill', v => d3.schemeCategory10[v.type])
+			.attr('stroke', 'white')
+			.on('mouseover', function (ev, tank) {
 
-			self.resetDot();
+				self.resetDot();
 
-			const dot = d3.select(this)
-			self.lastDot = dot;
-			dot.attr('r', self.radius * 2);
-			const t = self.srcMap[tank.id]
-			if (t?.base) {
-				self.tank = t.base;
-			}
-		});
+				const dot = d3.select(this);
+				self.lastDot = dot;
+				dot.attr('r', self.radius * 2);
+				const t = self.srcMap[tank.id];
+				if (t?.base) {
+					self.tank = t.base;
+				}
+			});
 	}
 
 	calcData(list: Data[]) {
@@ -157,15 +156,15 @@ export class MatrixComponent implements OnChanges {
 		const yRange = yMax - yMin;
 
 		list.forEach(v => {
-			v.x =  this.border + (v.nx - xMin) / xRange * this.size;
-			v.y =  this.border + (yMax - v.ny) / yRange * this.size;
+			v.x = this.border + (v.nx - xMin) / xRange * this.size;
+			v.y = this.border + (yMax - v.ny) / yRange * this.size;
 		});
 
-		const x = d3.scaleLinear().range([this.border, this.border + this.size]).domain([xMin, xMax])
+		const x = d3.scaleLinear().range([this.border, this.border + this.size]).domain([xMin, xMax]);
 		const ax = d3.axisBottom(x).ticks(12);
 		this.svg?.append('g').call(ax);
 
-		const y = d3.scaleLinear().range([this.border, this.border + this.size]).domain([yMax, yMin])
+		const y = d3.scaleLinear().range([this.border, this.border + this.size]).domain([yMax, yMin]);
 		const ay = d3.axisRight(y).ticks(12);
 		this.svg?.append('g').call(ay);
 	}

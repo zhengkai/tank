@@ -11,14 +11,14 @@ import { HistoryComponent } from './history/history.component';
 @NgModule({
 	declarations: [
 		BootstrapComponent,
-  ListComponent,
-  MatrixComponent,
-  HistoryComponent,
+		ListComponent,
+		MatrixComponent,
+		HistoryComponent,
 	],
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
-    	HttpClientModule,
+		HttpClientModule,
 	],
 	providers: [],
 	bootstrap: [

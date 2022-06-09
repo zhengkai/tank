@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { ApiService, TankMap } from '../common/api.service';
 import { pb } from '../../pb';
-import { MatrixComponent, Data } from '../matrix/matrix.component';
+import { Data } from '../matrix/matrix.component';
 
 interface Row {
 	id: number;
@@ -27,7 +27,7 @@ function uniq(value: any, index: any, self: any) {
 @Component({
 	selector: 'app-list',
 	templateUrl: './list.component.html',
-	styleUrls: ['./list.component.scss']
+	styleUrls: ['./list.component.scss'],
 })
 export class ListComponent implements OnInit {
 
@@ -293,7 +293,7 @@ export class ListComponent implements OnInit {
 	}
 
 	clickZeroStart() {
-		this.zeroStart = !this.zeroStart
+		this.zeroStart = !this.zeroStart;
 		this.updateURI();
 	}
 
@@ -538,7 +538,7 @@ export class ListComponent implements OnInit {
 		this.sort(maxBattle, maxNum);
 
 		if (this.selectNation.length) {
-			this.totalNum = ` / ${this.li.length}`
+			this.totalNum = ` / ${this.li.length}`;
 			this.li = this.li.filter((v: Row) => {
 				return this.selectNation.includes(v.nation);
 			});
@@ -588,7 +588,7 @@ export class ListComponent implements OnInit {
 			return 0;
 		}
 
-		const [num, _] = this.api.statsNum(key, st);
+		const [num] = this.api.statsNum(key, st);
 		return num;
 	}
 
