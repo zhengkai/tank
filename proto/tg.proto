@@ -12,3 +12,8 @@ message TGRow {
 	string name = 2;
 	string slug = 3;
 }
+
+message S4Row {
+	string id = 1;
+	string name = 2;
+}

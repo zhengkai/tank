@@ -3,6 +3,7 @@ package project
 import (
 	"project/cron"
 	"project/tank"
+	"project/wiki"
 	"project/zj"
 )
 
@@ -15,6 +16,8 @@ func Dev() {
 
 	tank.Build()
 	// wiki.Run()
+
+	wiki.Run()
 
 	// tank.Date()
 	// tank.BuildHistory()

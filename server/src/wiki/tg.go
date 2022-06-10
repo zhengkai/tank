@@ -12,8 +12,6 @@ import (
 
 var tgURL = `https://tanks.gg/api/list`
 
-type tgMap map[string]*pb.TGRow
-
 func getTgMap() (m map[string]*pb.TGRow, err error) {
 
 	m = make(map[string]*pb.TGRow)

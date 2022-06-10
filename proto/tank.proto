@@ -115,4 +115,5 @@ message TankAlias {
 	string wiki = 2;
 	string tanksgg = 3;
 	string icon = 4;
+	string skill4ltu = 5;
 }

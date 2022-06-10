@@ -16,10 +16,8 @@ func build() (err error) {
 
 	defaultSID()
 
-	m, err := getTgMap()
-	if err != nil {
-		return
-	}
+	tg, _ := getTgMap()
+	s4, _ := getS4Map()
 
 	wm, err := db.SIDWikiList()
 	if err != nil {
@@ -28,17 +26,17 @@ func build() (err error) {
 
 	for _, v := range wm {
 
-		sid := v.Wiki
-
-		t, ok := m[sid]
-		if !ok {
-			zj.W(`skip`, sid, t)
-			continue
+		t, ok := tg[v.Wiki]
+		if ok {
+			if v.Tanksgg != t.Slug {
+				db.SIDTg(v.ID, t.Slug)
+				v.Tanksgg = t.Slug
+			}
 		}
 
-		if v.Tanksgg != t.Slug {
-			db.SIDTg(v.ID, t.Slug)
-			v.Tanksgg = t.Slug
+		s, ok := s4[v.ID]
+		if ok {
+			v.Skill4Ltu = s
 		}
 	}
 

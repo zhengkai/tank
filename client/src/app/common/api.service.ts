@@ -23,6 +23,7 @@ export class ApiService {
 
 	historyCache: { [key: number]: ZCache } = {};
 	tanksgg: { [key: number]: string } = {};
+	skill4ltu: { [key: number]: string } = {};
 	icon: { [key: number]: string } = {};
 
 	buildTime = '';
@@ -83,7 +84,14 @@ export class ApiService {
 			this.mapID[id] = pb.TankAlias.fromObject(v);
 
 			const s = v?.tanksgg || '';
-			this.tanksgg[id] = s;
+			if (s) {
+				this.tanksgg[id] = s;
+			}
+
+			const s4 = v?.skill4ltu || '';
+			if (s4.length) {
+				this.skill4ltu[id] = s4;
+			}
 
 			const icon = v?.wiki || '';
 			this.icon[id] = icon;
