@@ -70,47 +70,58 @@ export class HistoryComponent implements OnChanges {
 		this.draw(d);
 	}
 
-	transData(d: pb.TankStatHistory|null): Data[] {
+	transData(d: pb.TankStatHistory|null): Data[][] {
 
 		const li = d?.list;
 		if (!li?.length) {
 			return [];
 		}
 
-		const re: Data[] = [];
-		for (const a of li) {
-			const t = '' + a?.date;
+		const full: Data[][] = [];
 
-			const st = this.higher ? a.statsHigher : a.stats;
-			if (!st) {
-				continue;
-			}
-
-			const [num, numShow] = this.api.statsNum(this.key, st);
-			if (!num) {
-				continue;
-			}
-			const o = {
-				num,
-				numShow,
-				date: new Date(`${t.substring(0, 4)}-${t.substring(4, 6)}-${t.substring(6, 8)}`),
-			} as Data;
-			re.push(o);
+		let key = [this.key];
+		const pk = ['p3', 'p2', 'p1'];
+		if (pk.includes(this.key)) {
+			key = pk;
 		}
 
-		return re;
+		for (const k of key) {
+			const re: Data[] = [];
+			for (const a of li) {
+				const t = '' + a?.date;
+
+				const st = this.higher ? a.statsHigher : a.stats;
+				if (!st) {
+					continue;
+				}
+
+				const [num, numShow] = this.api.statsNum(k, st);
+				if (!num) {
+					continue;
+				}
+				const o = {
+					num,
+					numShow,
+					date: new Date(`${t.substring(0, 4)}-${t.substring(4, 6)}-${t.substring(6, 8)}`),
+				} as Data;
+				re.push(o);
+			}
+			full.push(re);
+		}
+
+		return full;
 	}
 
-	draw(data: Data[]) {
+	draw(data: Data[][]) {
 
 		if (!data.length) {
 			return;
 		}
 
-		this.text(data);
+		this.text(data[0]);
 
-		const X = d3.map(data, v => new Date(v.date));
-		const Y = d3.map(data, v => v.num);
+		const X = d3.map(data[0], v => new Date(v.date));
+		const Y = d3.map(data[0], v => v.num);
 		const I = d3.range(X.length);
 
 		const width = this.box.nativeElement.offsetWidth;
@@ -125,9 +136,18 @@ export class HistoryComponent implements OnChanges {
 		const yRange = [height - marginBottom, marginTop];
 
 		const xDomain = d3.extent(X);
+
+		let dy = Y;
+		if (data.length > 1) {
+			dy = [];
+			data.forEach(col => {
+				dy.push(...d3.map(col, v => v.num));
+			});
+		}
+
 		const yDomain = [
-			(d3.min(Y) as number),
-			(d3.max(Y) as number),
+			(d3.min(dy) as number),
+			(d3.max(dy) as number),
 		];
 
 		if (this.zeroStart) {
@@ -144,13 +164,6 @@ export class HistoryComponent implements OnChanges {
 		const xAxis = d3.axisBottom(xScale).ticks(width / 80).tickSizeOuter(0);
 		const yAxis = d3.axisLeft(yScale).ticks(height / 80);
 
-		// Construct a line generator.
-		const line = d3.line()
-			.curve(d3.curveLinear)
-			.x((_, i) => xScale(X[i]))
-			.y((_, i) => yScale(Y[i]));
-
-		const li = line(data.map(v => [+v.date, v.num]));
 		const svg = d3.select(this.box.nativeElement).append('svg');
 		if (this.svg) {
 			this.svg.remove();
@@ -169,7 +182,7 @@ export class HistoryComponent implements OnChanges {
 				const x = Math.round(xScale(X[i])) - 0.5;
 				const y = yScale(Y[i]) + 5;
 
-				this.pointermoved(event, data[i]);
+				this.pointermoved(event, data.map(col => col[i]));
 				this.tooltip.style('display', null)
 					.attr('transform', `translate(${x},${y})`);
 				this.svg.property('value', I[i]).dispatch('input', { bubbles: true });
@@ -192,14 +205,25 @@ export class HistoryComponent implements OnChanges {
 				.attr('x2', width - marginLeft - marginRight)
 				.attr('stroke-opacity', 0.1));
 
-		svg.append('path')
-			.attr('fill', 'none')
-			.attr('stroke', 'currentColor')
-			.attr('stroke-width', 1.5)
-			.attr('stroke-linecap', 'round')
-			.attr('stroke-linejoin', 'round')
-			.attr('stroke-opacity', 1)
-			.attr('d', li);
+		for (const col of data) {
+
+			const yt = d3.map(col, v => v.num);
+
+			const line = d3.line()
+				.curve(d3.curveLinear)
+				.x((_, i) => xScale(X[i]))
+				.y((_, i) => yScale(yt[i]));
+
+			const li = line(col.map(v => [+v.date, v.num]));
+			svg.append('path')
+				.attr('fill', 'none')
+				.attr('stroke', 'currentColor')
+				.attr('stroke-width', 1.5)
+				.attr('stroke-linecap', 'round')
+				.attr('stroke-linejoin', 'round')
+				.attr('stroke-opacity', 1)
+				.attr('d', li);
+		}
 
 		this.tooltip = svg.append('g')
 			.style('pointer-events', 'none')
@@ -215,7 +239,7 @@ export class HistoryComponent implements OnChanges {
 			.attr('y2', 1000);
 	}
 
-	pointermoved(event: PointerEvent, r: Data) {
+	pointermoved(event: PointerEvent, r: Data[]) {
 
 		const path = this.tooltip.selectAll('path')
 			.data([,]) // eslint-disable-line
@@ -223,12 +247,15 @@ export class HistoryComponent implements OnChanges {
 			.attr('fill', 'white')
 			.attr('stroke', 'black');
 
+		const d = [r[0].date.toISOString().substring(0, 10)];
+		d.push(...r.map(row => row.numShow));
+
 		const text = this.tooltip.selectAll('text')
 			.data([,]) // eslint-disable-line
 			.join('text')
 			.call((text: any) => text
 				.selectAll('tspan')
-				.data([r.date.toISOString().substring(0, 10), r.numShow])
+				.data(d)
 				.join('tspan')
 				.attr('x', 0)
 				.attr('y', (_: any, i: number) => `${i * 1.1}em`)

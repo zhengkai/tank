@@ -20,6 +20,8 @@ interface Row {
 	rank: number;
 }
 
+const pk = ['p1', 'p2', 'p3'];
+
 function uniq(value: any, index: any, self: any) {
 	return self.indexOf(value) === index;
 }
@@ -60,6 +62,8 @@ export class ListComponent implements OnInit {
 	yKey = '';
 	byBattle = false;
 	higher = true;
+
+	historyP = 'p1';
 
 	tableType = 'table';
 	tableList = [
@@ -133,6 +137,12 @@ export class ListComponent implements OnInit {
 		{
 			id: 'survived',
 			name: '幸存',
+		},
+	];
+	historyKeyList = [
+		{
+			id: 'dmg',
+			name: '伤害',
 		},
 	];
 	yKeyList = [
@@ -279,17 +289,20 @@ export class ListComponent implements OnInit {
 
 	clickKey(t: string) {
 		this.key = t;
+		this.historyKey = t;
 		this.select();
 	}
 
 	clickHistoryKey(t: string) {
 		this.historyKey = t;
-		if (t !== 'battle') {
+
+		if (t === 'p1') {
+			this.key = this.historyP;
+		} else if (t !== 'battle') {
 			this.key = t;
-			this.select();
-		} else {
-			this.updateURI();
 		}
+		// this.select();
+		this.updateURI();
 	}
 
 	clickZeroStart() {
@@ -549,8 +562,6 @@ export class ListComponent implements OnInit {
 		if (this.li.length) {
 			this.matrix();
 		}
-
-		console.log('update select');
 		this.updateURI();
 	}
 
@@ -637,11 +648,35 @@ export class ListComponent implements OnInit {
 		if (!name) {
 			return;
 		}
+		if (pk.includes(this.key)) {
+			this.historyP = this.key;
+		}
+		this.historyKeyListReset();
 		this.tankName = name;
 		this.historyID = id;
 	}
 
+	historyKeyListReset() {
+		this.historyKeyList.length = 0;
+		this.yKeyList.forEach(v => {
+			if (v?.id === 'p1') {
+				this.historyKeyList.push({
+					id: this.historyP,
+					name: '1/2/3 环',
+				});
+			} else if (!pk.includes(v?.id)) {
+				this.historyKeyList.push(v);
+			}
+		});
+	}
+
 	historyClick(id: number) {
+		if (!id) {
+			if (this.historyKey === 'battle') {
+				this.byBattle = true;
+			}
+			this.select();
+		}
 		this.history(id);
 		this.updateURI();
 	}
