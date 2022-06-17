@@ -1,7 +1,9 @@
 package tank
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"project/config"
 	"project/db"
 	"project/pb"
@@ -69,6 +71,12 @@ func Build() (err error) {
 	}
 
 	util.WriteFile(File(), tl)
+
+	ab, err := json.MarshalIndent(tl, ``, "\t")
+	if err == nil {
+		ioutil.WriteFile(config.OutputPath+`/list.json`, ab, 0666)
+	}
+
 	return
 }
 

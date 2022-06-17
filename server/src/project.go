@@ -19,6 +19,8 @@ func Dev() {
 
 	wiki.Run()
 
+	zj.J(`done`)
+
 	// tank.Date()
 	// tank.BuildHistory()
 	// go cron.Run()
