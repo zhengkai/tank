@@ -54,6 +54,10 @@ td .btn {
 	word-break: keep-all;
 }
 
+.hide-sub > * {
+	display: none;
+}
+
 td.extra {
 	display: none;
 }

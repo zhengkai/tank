@@ -32,6 +32,8 @@ export class HistoryComponent implements OnChanges {
 	svg: any = null;
 	tooltip: any = null;
 
+	emptyData = false;
+
 	constructor(
 		public api: ApiService,
 	) {
@@ -106,7 +108,9 @@ export class HistoryComponent implements OnChanges {
 				} as Data;
 				re.push(o);
 			}
-			full.push(re);
+			if (re.length) {
+				full.push(re);
+			}
 		}
 
 		return full;
@@ -115,8 +119,10 @@ export class HistoryComponent implements OnChanges {
 	draw(data: Data[][]) {
 
 		if (!data.length) {
+			this.emptyData = true;
 			return;
 		}
+		this.emptyData = false;
 
 		this.text(data[0]);
 
@@ -125,6 +131,7 @@ export class HistoryComponent implements OnChanges {
 		const I = d3.range(X.length);
 
 		const width = this.box.nativeElement.offsetWidth;
+
 		const height = 500;
 
 		const marginTop = 20;

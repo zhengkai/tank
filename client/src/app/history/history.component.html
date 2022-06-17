@@ -5,4 +5,6 @@
 
 <p *ngIf="loading" class="mt-5 mb-5 text-center">loading ...</p>
 
-<div #box class="no-select"></div>
+<p *ngIf="!loading && emptyData" class="mt-5 mb-5 text-center">暂无数据</p>
+
+<div #box class="no-select" [class.hide-sub]="emptyData"></div>
