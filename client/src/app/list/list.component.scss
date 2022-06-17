@@ -44,16 +44,6 @@ td.key-num {
 	width: 90px;
 }
 
-td.name {
-	p {
-		width: 12rem;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		margin: 0;
-	}
-}
-
 td.rank {
 	width: 4rem;
 }
@@ -113,9 +103,36 @@ button > img.flag {
 	left: -1000px;
 }
 
+.table td.name {
+	padding-right: 0;
+	p {
+		width: 15rem;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		margin: 0;
+	}
+}
+
 @media (max-width: 992px) {
 	td.wiki {
 		display: none;
+	}
+	.table {
+		td.tier {
+			width: 2.5rem;
+		}
+		td.name {
+			p {
+				width: 11rem;
+			}
+		}
+		td.bar {
+			max-width: 6rem;
+		}
+		td {
+			padding-left: 0;
+		}
 	}
 }
 
