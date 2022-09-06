@@ -95,6 +95,7 @@ func Crawl(tier int, higher bool, ty int, simulate bool) (cnt int, err error) {
 				t := time.Now()
 				ab, err = zu.FetchURL(url)
 				metrics.CrawlTime(time.Now().Sub(t))
+				metrics.CrawlBytes(ab)
 				if err == nil {
 					break
 				}
