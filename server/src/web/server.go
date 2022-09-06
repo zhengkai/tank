@@ -7,14 +7,16 @@ import (
 	"time"
 
 	"github.com/arl/statsviz"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 // Server ...
 func Server(port int) {
 
-	addr := fmt.Sprintf(`localhost:%d`, port)
+	addr := fmt.Sprintf(`:%d`, port)
 
 	mux := http.NewServeMux()
+	mux.Handle(`/metrics`, promhttp.Handler())
 	mux.HandleFunc(`/`, failbackHandle)
 
 	statsviz.Register(mux)

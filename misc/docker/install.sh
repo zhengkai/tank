@@ -21,6 +21,7 @@ sudo docker run -d --name tank \
 	--env "TANK_MYSQL=tank:tank@tcp(172.17.0.1:3306)/tank" \
 	--env "TMP_PATH=/tmp" \
 	--env "OUTPUT_PATH=/output" \
+	--publish "127.0.0.1:21024:80" \
 	--mount type=bind,source=/www/tank/output,target=/output \
 	--mount type=bind,source=/www/tank/log,target=/log \
 	--mount type=bind,source=/www/tank/tmp,target=/tmp \

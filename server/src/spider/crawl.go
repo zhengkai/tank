@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"project/config"
+	"project/metrics"
 	"project/zj"
 	"time"
 
@@ -91,10 +92,13 @@ func Crawl(tier int, higher bool, ty int, simulate bool) (cnt int, err error) {
 			zj.J(url)
 
 			for range []int{0, 0, 0} {
+				t := time.Now()
 				ab, err = zu.FetchURL(url)
-				if err != nil {
+				metrics.CrawlTime(time.Now().Sub(t))
+				if err == nil {
 					break
 				}
+				metrics.CrawlFail()
 			}
 			if err != nil {
 				zj.W(`fetch url fail`, err)

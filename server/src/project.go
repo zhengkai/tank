@@ -3,6 +3,7 @@ package project
 import (
 	"project/cron"
 	"project/tank"
+	"project/web"
 	"project/wiki"
 	"project/zj"
 )
@@ -27,6 +28,8 @@ func Dev() {
 	// tank.Build()
 	// spider.CrawlAllSimulate()
 
+	go web.Server(21024)
+
 	select {}
 }
 
@@ -41,6 +44,8 @@ func Prod() {
 	go cron.Run()
 
 	zj.J(`prod start`)
+
+	go web.Server(80)
 
 	select {}
 }
