@@ -37,24 +37,17 @@ func getTgMap() (m map[string]*pb.TGRow, err error) {
 
 func tgFile() (ab []byte, err error) {
 
+	file := config.OutputPath + `/tg.json`
+
 	defer zj.Watch(&err)
 
-	file := config.OutputPath + `/tg.json`
-	ab, err = os.ReadFile(file)
-	if err == nil {
-		return
-	}
-
 	rsp, err := http.Get(tgURL)
-	if err != nil {
-		return
+	if err == nil {
+		ab, err = io.ReadAll(rsp.Body)
+		if err == nil {
+			os.WriteFile(file, ab, 0666)
+			return
+		}
 	}
-
-	ab, err = io.ReadAll(rsp.Body)
-	if err != nil {
-		return
-	}
-
-	os.WriteFile(file, ab, 0666)
-	return
+	return os.ReadFile(file)
 }

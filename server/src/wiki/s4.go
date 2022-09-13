@@ -54,24 +54,17 @@ func getS4Map() (m map[uint32]string, err error) {
 
 func s4File() (ab []byte, err error) {
 
+	file := config.OutputPath + `/s4.json`
+
 	defer zj.Watch(&err)
 
-	file := config.OutputPath + `/s4.json`
-	ab, err = os.ReadFile(file)
-	if err == nil {
-		return
-	}
-
 	rsp, err := http.Get(s4URL)
-	if err != nil {
-		return
+	if err == nil {
+		ab, err = io.ReadAll(rsp.Body)
+		if err == nil {
+			os.WriteFile(file, ab, 0666)
+			return
+		}
 	}
-
-	ab, err = io.ReadAll(rsp.Body)
-	if err != nil {
-		return
-	}
-
-	os.WriteFile(file, ab, 0666)
-	return
+	return os.ReadFile(file)
 }
