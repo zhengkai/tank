@@ -2,7 +2,7 @@ package wiki
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 	"project/config"
 	"project/db"
 	"project/pb"
@@ -53,7 +53,7 @@ func build() (err error) {
 
 	ab, err := json.MarshalIndent(out, ``, "\t")
 	if err == nil {
-		ioutil.WriteFile(config.OutputPath+`/id.json`, ab, 0666)
+		os.WriteFile(config.OutputPath+`/id.json`, ab, 0666)
 	}
 
 	return

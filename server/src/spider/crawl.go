@@ -2,7 +2,7 @@ package spider
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"project/config"
 	"project/metrics"
 	"project/zj"
@@ -26,14 +26,14 @@ func crawlAll(simulate bool) (err error) {
 	var cnt int
 	var cntSum int
 
-	for lv := 10; lv >= 3; lv-- {
+	for lv := 11; lv >= 3; lv-- {
 		for _, higher := range []bool{false, true} {
 			for _, ty := range []int{0, 1, 2} {
 				t := time.Now()
 				cnt, err = Crawl(lv, higher, ty, simulate)
 				cntSum += cnt
 				if cnt > 0 {
-					zj.J(`crawl row`, lv, higher, ty, time.Now().Sub(t), cnt)
+					zj.J(`crawl row`, lv, higher, ty, time.Since(t), cnt)
 				}
 			}
 		}
@@ -43,7 +43,7 @@ func crawlAll(simulate bool) (err error) {
 			cnt, err = CrawlPercent(lv, percent, simulate)
 			cntSum += cnt
 			if cnt > 0 {
-				zj.J(`crawl percent`, lv, percent, time.Now().Sub(t), cnt)
+				zj.J(`crawl percent`, lv, percent, time.Since(t), cnt)
 			}
 		}
 	}
@@ -82,7 +82,7 @@ func Crawl(tier int, higher bool, ty int, simulate bool) (cnt int, err error) {
 		url := `https://tbox.wot.360.cn/rank/more?rank_type=%s&page=%d&size=30&type=%s&tier=%d&sort=damage_dealt_avg&tank_sort=1,2,3`
 
 		if simulate {
-			ab, err = ioutil.ReadFile(file)
+			ab, err = os.ReadFile(file)
 			if err != nil {
 				return
 			}
@@ -105,7 +105,7 @@ func Crawl(tier int, higher bool, ty int, simulate bool) (cnt int, err error) {
 				zj.W(`fetch url fail`, err)
 				return
 			}
-			ioutil.WriteFile(file, ab, 0666)
+			os.WriteFile(file, ab, 0666)
 		}
 
 		cnt++
@@ -146,7 +146,7 @@ func CrawlPercent(tier, percent int, simulate bool) (cnt int, err error) {
 		file := fmt.Sprintf(`%s/percent-%d-%d-%d.json`, config.TmpPath, tier, percent, page)
 
 		if simulate {
-			ab, err = ioutil.ReadFile(file)
+			ab, err = os.ReadFile(file)
 			if err != nil {
 				return
 			}
@@ -166,7 +166,7 @@ func CrawlPercent(tier, percent int, simulate bool) (cnt int, err error) {
 				zj.W(`fetch url fail`, err)
 				return
 			}
-			ioutil.WriteFile(file, ab, 0666)
+			os.WriteFile(file, ab, 0666)
 		}
 
 		cnt++

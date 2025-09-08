@@ -1,7 +1,7 @@
 package util
 
 import (
-	"io/ioutil"
+	"os"
 	"project/zj"
 
 	"github.com/zhengkai/zu"
@@ -18,7 +18,7 @@ func WriteFile(file string, d proto.Message) (err error) {
 		return
 	}
 
-	err = ioutil.WriteFile(file, ab, 0666)
+	err = os.WriteFile(file, ab, 0666)
 	if err != nil {
 		return
 	}

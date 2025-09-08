@@ -15,8 +15,9 @@ func Dev() {
 
 	zj.J(`dev start`)
 
+	// spider.CrawlAll()
+
 	tank.Build()
-	// wiki.Run()
 
 	wiki.Run()
 
