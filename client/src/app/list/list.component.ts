@@ -77,7 +77,7 @@ export class ListComponent implements OnInit {
 		},
 	];
 
-	tierList = [3, 4, 5, 6, 7, 8, 9, 10];
+	tierList = [3, 4, 5, 6, 7, 8, 9, 10, 11];
 	typeList = [
 		{
 			id: pb.TankEnum.type.LT,
@@ -635,7 +635,7 @@ export class ListComponent implements OnInit {
 		});
 	}
 
-	history(id: number|string|null): void {
+	history(id: number | string | null): void {
 		this.tankName = '';
 		this.historyID = 0;
 		if (!id) {

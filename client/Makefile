@@ -14,5 +14,5 @@ init:
 
 prod:
 	./dist/build.sh tank.9farm.com prod
-	ssh eirena 'mkdir -p /www/tank/public/'
-	rsync --partial -vzrtopg -e ssh ./dist/prod/ eirena:/www/tank/public/
+	ssh doll 'mkdir -p /www/tank/public/'
+	rsync --partial -vzrtopg ./dist/prod/ doll:/www/tank/public/
