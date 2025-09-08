@@ -6,7 +6,7 @@ import (
 	"project/config"
 	"project/db"
 	"project/pb"
-	"sort"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -93,9 +93,7 @@ func (dd *dateData) arrange() {
 	for k := range dd.dateMap {
 		d = append(d, k)
 	}
-	sort.Slice(d, func(i, j int) bool {
-		return d[i] < d[j]
-	})
+	slices.Sort(d)
 
 	f, err := dd.file(d)
 	if err != nil {
@@ -103,7 +101,7 @@ func (dd *dateData) arrange() {
 	}
 
 	for id, tm := range dd.tankMap {
-		base, _ := dd.baseMap[id]
+		base := dd.baseMap[id]
 
 		flag := fmt.Sprintf(`https://tank.9farm.com/assets/flag/%d.png`, base.Nation)
 		name := strings.ReplaceAll(base.Name, `"`, ``)
