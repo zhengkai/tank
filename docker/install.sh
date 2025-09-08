@@ -1,6 +1,11 @@
 #!/bin/bash -e
 
+if [ ! -d /www/tank ]; then
+	exit
+fi
+
 mkdir -p /www/tank/output/tmp
+mkdir -p /www/tank/output/history
 mkdir -p /www/tank/log
 
 sudo docker stop tank || :
