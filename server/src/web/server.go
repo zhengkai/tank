@@ -38,13 +38,19 @@ func Server(port int) {
 }
 
 func taskCrawlHandle(w http.ResponseWriter, r *http.Request) {
-	go task.Crawl()
-	w.Write([]byte(`task crawl`))
+	if task.Crawl() {
+		w.Write([]byte(`task crawl start`))
+		return
+	}
+	w.Write([]byte(`task crawl is running`))
 }
 
 func taskBuildHandle(w http.ResponseWriter, r *http.Request) {
-	go task.Build()
-	w.Write([]byte(`task build`))
+	if task.Build() {
+		w.Write([]byte(`task build start`))
+		return
+	}
+	w.Write([]byte(`task build is running`))
 }
 
 func failbackHandle(w http.ResponseWriter, r *http.Request) {

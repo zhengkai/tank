@@ -3,7 +3,6 @@ package project
 import (
 	"project/tank"
 	"project/web"
-	"project/wiki"
 	"project/zj"
 
 	"github.com/zhengkai/zu"
@@ -18,9 +17,9 @@ func Dev() {
 
 	// spider.CrawlAll()
 
-	tank.Build()
+	// tank.Build()
 
-	wiki.Run()
+	// wiki.Run()
 
 	zj.J(`done`)
 
