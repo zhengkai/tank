@@ -16,4 +16,4 @@ sudo docker run -d --name tank \
 	--mount type=bind,source=/www/tank/output,target=/output \
 	--mount type=bind,source=/www/tank/log,target=/log \
 	--restart always \
-	tank
+	zhengkai/tank

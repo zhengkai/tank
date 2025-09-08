@@ -1,6 +1,6 @@
 # builder stage
 
-FROM golang:latest as builder
+FROM golang:latest AS builder
 
 ARG DOCKER_RUNNING=yes
 ARG DEBIAN_FRONTEND=noninteractive
