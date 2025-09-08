@@ -7,7 +7,12 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt update && apt install -yq protobuf-compiler tzdata ca-certificates
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.8
 
-COPY . /project
+WORKDIR /project
+
+COPY server/src/go.mod server/src/go.sum ./
+RUN go mod graph && go mod download
+
+COPY . .
 
 RUN cd /project/proto && make
 

@@ -1,7 +1,7 @@
 SHELL:=/bin/bash
 
 build: git
-	sudo docker build -t zhengkai/tank -f Dockerfile ../..
+	sudo docker build -t tank --progress=plain -f Dockerfile ../..
 
 run: build
 	sudo docker run --env "TANK_MYSQL=tank:tank@tcp(172.17.0.1:3306)/tank" \
