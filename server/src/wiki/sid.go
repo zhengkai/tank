@@ -3,10 +3,11 @@ package wiki
 import (
 	"errors"
 	"fmt"
-	"net/http"
 	"project/db"
+	"project/util"
 	"project/zj"
 	"regexp"
+	"slices"
 )
 
 var regexpSID = regexp.MustCompile(`/tankopedia/(\d+)-(.+)/$`)
@@ -38,10 +39,9 @@ func SID(id uint32) (sid string, err error) {
 		err = errors.New(`empty id`)
 		return
 	}
-	for _, v := range ignoreSID {
-		if v == id {
-			return
-		}
+
+	if slices.Contains(ignoreSID, id) {
+		return
 	}
 
 	defer zj.Watch(&err)
@@ -51,7 +51,7 @@ func SID(id uint32) (sid string, err error) {
 		id,
 	)
 
-	rsp, err := http.Get(url)
+	rsp, err := util.HTTPNoProxyGet(url)
 	if err != nil {
 		return
 	}

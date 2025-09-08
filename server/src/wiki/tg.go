@@ -3,10 +3,10 @@ package wiki
 import (
 	"encoding/json"
 	"io"
-	"net/http"
 	"os"
 	"project/config"
 	"project/pb"
+	"project/util"
 	"project/zj"
 )
 
@@ -41,7 +41,7 @@ func tgFile() (ab []byte, err error) {
 
 	defer zj.Watch(&err)
 
-	rsp, err := http.Get(tgURL)
+	rsp, err := util.HTTPNoProxyGet(tgURL)
 	if err == nil {
 		ab, err = io.ReadAll(rsp.Body)
 		if err == nil {
