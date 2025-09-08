@@ -1,11 +1,12 @@
 package project
 
 import (
-	"project/cron"
 	"project/tank"
 	"project/web"
 	"project/wiki"
 	"project/zj"
+
+	"github.com/zhengkai/zu"
 )
 
 // Dev ...
@@ -42,9 +43,12 @@ func Prod() {
 	// spider.CrawlAll()
 	// tank.Build()
 	// time.Sleep(time.Hour)
-	go cron.Run()
 
 	zj.J(`prod start`)
+
+	if !zu.FileExists(tank.File()) {
+		go tank.Build()
+	}
 
 	go web.Server(80)
 

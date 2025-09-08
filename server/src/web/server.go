@@ -3,6 +3,7 @@ package web
 import (
 	"fmt"
 	"net/http"
+	"project/task"
 	"project/zj"
 	"time"
 
@@ -16,6 +17,8 @@ func Server(port int) {
 	addr := fmt.Sprintf(`:%d`, port)
 
 	mux := http.NewServeMux()
+	mux.HandleFunc(`/task/crawl`, taskCrawlHandle)
+	mux.HandleFunc(`/task/build`, taskBuildHandle)
 	mux.Handle(`/metrics`, promhttp.Handler())
 	mux.HandleFunc(`/`, failbackHandle)
 
@@ -32,6 +35,16 @@ func Server(port int) {
 	zj.J(`start web server`, addr)
 
 	s.ListenAndServe()
+}
+
+func taskCrawlHandle(w http.ResponseWriter, r *http.Request) {
+	go task.Crawl()
+	w.Write([]byte(`task crawl`))
+}
+
+func taskBuildHandle(w http.ResponseWriter, r *http.Request) {
+	go task.Build()
+	w.Write([]byte(`task build`))
 }
 
 func failbackHandle(w http.ResponseWriter, r *http.Request) {
