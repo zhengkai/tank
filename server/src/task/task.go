@@ -4,6 +4,7 @@ import (
 	"project/spider"
 	"project/tank"
 	"project/wiki"
+	"project/zj"
 	"sync"
 )
 
@@ -19,9 +20,11 @@ func Crawl() bool {
 }
 
 func crawl() {
+	zj.J(`task crawl start`)
 	spider.CrawlAll()
 	tank.Build()
 	tank.Date()
+	zj.J(`task crawl done`)
 	crawlMux.Unlock()
 }
 
@@ -34,7 +37,9 @@ func Build() bool {
 }
 
 func build() {
+	zj.J(`task build start`)
 	tank.BuildHistory()
 	wiki.Run()
+	zj.J(`task build done`)
 	buildMux.Unlock()
 }
