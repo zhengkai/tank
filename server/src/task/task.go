@@ -36,4 +36,5 @@ func Build() bool {
 func build() {
 	tank.BuildHistory()
 	wiki.Run()
+	buildMux.Unlock()
 }
