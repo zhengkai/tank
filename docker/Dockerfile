@@ -10,13 +10,17 @@ RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.8
 WORKDIR /project
 
 COPY server/src/go.mod server/src/go.sum ./
-RUN go mod graph && go mod download
+RUN --mount=type=cache,target=/go/pkg/mod \
+	--mount=type=cache,target=/root/.cache/go-build \
+	go mod graph && go mod download
 
 COPY . .
 
 RUN cd /project/proto && make
 
-RUN /project/server/build/build-server.sh prod
+RUN --mount=type=cache,target=/go/pkg/mod \
+	--mount=type=cache,target=/root/.cache/go-build \
+	/project/server/build/build-server.sh prod
 
 # clean stage
 
