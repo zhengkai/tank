@@ -1,7 +1,7 @@
 SHELL:=/bin/bash
 
 build: git
-	sudo docker build -t tank --progress=plain -f Dockerfile ../..
+	sudo docker build -t tank --progress=plain -f Dockerfile ..
 
 run: build
 	sudo docker run --env "TANK_MYSQL=tank:tank@tcp(172.17.0.1:3306)/tank" \
@@ -17,7 +17,7 @@ install: build
 	ssh eirena "chmod +x /tmp/install.sh && /tmp/install.sh && rm /tmp/install.sh"
 
 git:
-	../../server/build/git-hash.sh > ../../server/build/.git-hash
+	../server/build/git-hash.sh > ../server/build/.git-hash
 
 clean:
 	sudo docker stop tank || :
