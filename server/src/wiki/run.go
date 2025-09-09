@@ -14,12 +14,10 @@ func Run() {
 	}
 
 	for _, id := range tank.LoadID() {
-
 		_, ok := wm[id]
 		if ok {
 			continue
 		}
-
 		SID(id)
 	}
 

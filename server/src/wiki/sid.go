@@ -30,7 +30,15 @@ func defaultSID() {
 	db.SIDWiki(59169, `A117_T26E5_Patriot`)
 }
 
-var ignoreSID = []uint32{50721, 64769, 48145, 62001, 59217}
+var ignoreSID = []uint32{
+	50721,
+	64769,
+	48145,
+	62001,
+	59217,
+	65601,
+	49681,
+}
 
 // SID ...
 func SID(id uint32) (sid string, err error) {
