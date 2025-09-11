@@ -5,10 +5,9 @@ import (
 	"os"
 	"project/config"
 	"project/metrics"
+	"project/util"
 	"project/zj"
 	"time"
-
-	"github.com/zhengkai/zu"
 )
 
 // CrawlAll ...
@@ -93,7 +92,7 @@ func Crawl(tier int, higher bool, ty int, simulate bool) (cnt int, err error) {
 
 			for range []int{0, 0, 0} {
 				t := time.Now()
-				ab, err = zu.FetchURL(url)
+				ab, err = util.FetchURL(url)
 				metrics.CrawlTime(time.Now().Sub(t))
 				metrics.CrawlBytes(ab)
 				if err == nil {
@@ -157,7 +156,7 @@ func CrawlPercent(tier, percent int, simulate bool) (cnt int, err error) {
 			url = fmt.Sprintf(url, percentNum, page, tier)
 
 			for range []int{0, 0, 0} {
-				ab, err = zu.FetchURL(url)
+				ab, err = util.FetchURL(url)
 				if err != nil {
 					break
 				}

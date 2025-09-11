@@ -614,7 +614,7 @@ func s4File() (ab []byte, err error) {
 
 		defer zj.Watch(&err)
 
-		rsp, err := http.Get(s4URL)
+		rsp, err := util.HTTPNoProxyGet(s4URL)
 		if err == nil {
 			ab, err = io.ReadAll(rsp.Body)
 			if err == nil {
