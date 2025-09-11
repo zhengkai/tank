@@ -11,10 +11,7 @@ run: build
 		tank
 
 install: build
-	sudo docker save tank > docker-tank.tar
-	scp docker-tank.tar eirena:/tmp
-	scp install.sh eirena:/tmp
-	ssh eirena "chmod +x /tmp/install.sh && /tmp/install.sh && rm /tmp/install.sh"
+	./install.sh
 
 git:
 	../server/build/git-hash.sh > ../server/build/.git-hash
