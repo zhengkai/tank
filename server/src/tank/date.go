@@ -3,7 +3,6 @@ package tank
 import (
 	"fmt"
 	"os"
-	"project/config"
 	"project/db"
 	"project/pb"
 	"slices"
@@ -131,9 +130,7 @@ func (dd *dateData) file(date []uint32) (f *os.File, err error) {
 		name += `-higher`
 	}
 
-	name = fmt.Sprintf(`%s/%s.csv`, config.OutputPath, name)
-
-	f, err = os.OpenFile(name, os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0666)
+	f, err = os.OpenFile(fileLocal(name), os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		return
 	}

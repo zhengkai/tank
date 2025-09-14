@@ -3,14 +3,14 @@ package tank
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"project/config"
 	"project/db"
 	"project/pb"
-	"project/util"
 	"project/zj"
 	"strconv"
 )
+
+const ListFile = `list.pb`
 
 // Build ...
 func Build() (err error) {
@@ -70,17 +70,11 @@ func Build() (err error) {
 		tl.BuildTime = sdi + `-` + sdx
 	}
 
-	util.WriteFile(File(), tl)
+	WritePB(`list.pb`, tl)
 
 	ab, err := json.MarshalIndent(tl, ``, "\t")
 	if err == nil {
-		os.WriteFile(config.OutputPath+`/list.json`, ab, 0666)
+		WriteFile(`list.json`, ab)
 	}
-
 	return
-}
-
-// File ...
-func File() string {
-	return config.OutputPath + `/list.pb`
 }

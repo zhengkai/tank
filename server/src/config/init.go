@@ -6,9 +6,8 @@ import (
 
 func init() {
 	list := map[string]*string{
-		`TANK_MYSQL`:  &MySQL,
-		`OUTPUT_PATH`: &OutputPath,
-		`TMP_PATH`:    &TmpPath,
+		`TANK_MYSQL`:      &MySQL,
+		`TANK_STATIC_DIR`: &StaticDir,
 	}
 	for k, v := range list {
 		s := os.Getenv(k)

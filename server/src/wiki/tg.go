@@ -3,8 +3,6 @@ package wiki
 import (
 	"encoding/json"
 	"io"
-	"os"
-	"project/config"
 	"project/pb"
 	"project/util"
 	"project/zj"
@@ -37,17 +35,18 @@ func getTgMap() (m map[string]*pb.TGRow, err error) {
 
 func tgFile() (ab []byte, err error) {
 
-	file := config.OutputPath + `/tg.json`
+	file := `tg.json`
 
 	defer zj.Watch(&err)
 
 	rsp, err := util.HTTPNoProxyGet(tgURL)
+	zj.J(err)
 	if err == nil {
 		ab, err = io.ReadAll(rsp.Body)
 		if err == nil {
-			os.WriteFile(file, ab, 0666)
+			util.WriteFile(file, ab)
 			return
 		}
 	}
-	return os.ReadFile(file)
+	return util.ReadFile(file)
 }

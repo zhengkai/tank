@@ -2,10 +2,8 @@ package tank
 
 import (
 	"fmt"
-	"project/config"
 	"project/db"
 	"project/pb"
-	"project/util"
 	"project/zj"
 	"time"
 )
@@ -14,7 +12,11 @@ import (
 func BuildHistory() (err error) {
 	Mux.Lock()
 	defer Mux.Unlock()
+	size := len(mapBase)
+	i := 0
 	for _, tb := range mapBase {
+		i++
+		zj.F(`%3d/%3d %5d %s`, i, size, tb.ID, tb.Name)
 		historyOne(tb.ID)
 		time.Sleep(time.Second / 20)
 	}
@@ -55,7 +57,7 @@ func historyOne(id uint32) (err error) {
 		List:   li,
 	}
 
-	file := fmt.Sprintf(`%s/history/%d.pb`, config.OutputPath, id)
-	util.WriteFile(file, d)
+	file := fmt.Sprintf(`history/%d.pb`, id)
+	WritePB(file, d)
 	return
 }

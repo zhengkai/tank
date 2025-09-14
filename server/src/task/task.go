@@ -6,6 +6,7 @@ import (
 	"project/wiki"
 	"project/zj"
 	"sync"
+	"time"
 )
 
 var crawlMux sync.Mutex
@@ -21,10 +22,10 @@ func Crawl() bool {
 
 func crawl() {
 	zj.J(`task crawl start`)
+	t := time.Now()
 	spider.CrawlAll()
-	tank.Build()
 	tank.Date()
-	zj.J(`task crawl done`)
+	zj.J(`task crawl done`, time.Since(t).String())
 	crawlMux.Unlock()
 }
 
@@ -38,8 +39,10 @@ func Build() bool {
 
 func build() {
 	zj.J(`task build start`)
+	t := time.Now()
 	tank.BuildHistory()
+	tank.Build()
 	wiki.Run()
-	zj.J(`task build done`)
+	zj.J(`task build done`, time.Since(t).String())
 	buildMux.Unlock()
 }

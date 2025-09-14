@@ -1,10 +1,6 @@
 package config
 
-// TmpPath ...
-var TmpPath = `/www/tank/tmp`
-
-// OutputPath ...
-var OutputPath = `/www/tank/output`
+var StaticDir = `/www/tank/static`
 
 // MySQL ...
 var MySQL = `tank:tank@/tank`

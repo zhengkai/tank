@@ -2,10 +2,9 @@ package project
 
 import (
 	"project/tank"
+	"project/util"
 	"project/web"
 	"project/zj"
-
-	"github.com/zhengkai/zu"
 )
 
 // Dev ...
@@ -45,7 +44,7 @@ func Prod() {
 
 	zj.J(`prod start`)
 
-	if !zu.FileExists(tank.File()) {
+	if !util.FileExists(tank.ListFile) {
 		go tank.Build()
 	}
 

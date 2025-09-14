@@ -2,12 +2,12 @@ package wiki
 
 import (
 	"encoding/json"
-	"os"
-	"project/config"
 	"project/db"
 	"project/pb"
 	"project/util"
 	"project/zj"
+
+	"google.golang.org/protobuf/proto"
 )
 
 func build() (err error) {
@@ -48,12 +48,16 @@ func build() (err error) {
 		out.List = append(out.List, v)
 	}
 
-	file := config.OutputPath + `/id.pb`
-	util.WriteFile(file, out)
+	ab, err := proto.Marshal(out)
+	if err != nil {
+		zj.W(`proto marshal error:`, err)
+	}
+	file := `data/id.pb`
+	util.WriteFile(file, ab)
 
-	ab, err := json.MarshalIndent(out, ``, "\t")
+	ab, err = json.MarshalIndent(out, ``, "\t")
 	if err == nil {
-		os.WriteFile(config.OutputPath+`/id.json`, ab, 0666)
+		util.WriteFile(`data/id.json`, ab)
 	}
 
 	return
