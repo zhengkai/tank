@@ -26,8 +26,6 @@ RUN --mount=type=cache,target=/go/pkg/mod \
 
 FROM alpine
 
-RUN apk add --no-cache gzip brotli
-
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /usr/share/zoneinfo/Asia/Shanghai /usr/share/zoneinfo/Asia/
 COPY --from=builder /project/server/dist/prod/tank-server-next /tank-server

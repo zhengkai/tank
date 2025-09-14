@@ -54,10 +54,7 @@ func SID(id uint32) (sid string, err error) {
 
 	defer zj.Watch(&err)
 
-	url := fmt.Sprintf(
-		`https://wotgame.cn/zh-cn/tankopedia/%d/`,
-		id,
-	)
+	url := fmt.Sprintf(`https://wotgame.cn/zh-cn/tankopedia/%d/`, id)
 
 	rsp, err := util.HTTPNoProxyGet(url)
 	if err != nil {

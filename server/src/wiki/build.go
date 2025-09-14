@@ -12,18 +12,26 @@ import (
 
 func build() (err error) {
 
+	zj.J(`wiki build`)
+
 	defer zj.Watch(&err)
+
+	zj.J(`  wiki build load`)
 
 	defaultSID()
 
+	zj.J(`  wiki tg`)
 	tg, _ := getTgMap()
+	zj.J(`  wiki s4`)
 	s4, _ := getS4Map()
 
+	zj.J(`  wiki list`)
 	wm, err := db.SIDWikiList()
 	if err != nil {
 		return
 	}
 
+	zj.J(`  wiki build loop`)
 	for _, v := range wm {
 
 		t, ok := tg[v.Wiki]
@@ -39,6 +47,8 @@ func build() (err error) {
 			v.Skill4Ltu = s
 		}
 	}
+
+	zj.J(`wiki build write`)
 
 	out := &pb.TankAliasList{
 		List: make([]*pb.TankAlias, 0, len(wm)),

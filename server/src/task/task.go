@@ -40,8 +40,11 @@ func Build() bool {
 func build() {
 	zj.J(`task build start`)
 	t := time.Now()
+	zj.J(`  task build history`)
 	tank.BuildHistory()
+	zj.J(`  task build list`)
 	tank.Build()
+	zj.J(`  task build wiki`)
 	wiki.Run()
 	zj.J(`task build done`, time.Since(t).String())
 	buildMux.Unlock()

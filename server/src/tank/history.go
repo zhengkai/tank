@@ -5,7 +5,6 @@ import (
 	"project/db"
 	"project/pb"
 	"project/zj"
-	"time"
 )
 
 // BuildHistory ...
@@ -18,7 +17,6 @@ func BuildHistory() (err error) {
 		i++
 		zj.F(`%3d/%3d %5d %s`, i, size, tb.ID, tb.Name)
 		historyOne(tb.ID)
-		time.Sleep(time.Second / 20)
 	}
 	return
 }

@@ -2,10 +2,11 @@ package wiki
 
 import (
 	"encoding/json"
-	"io"
 	"project/pb"
 	"project/util"
 	"project/zj"
+
+	"github.com/zhengkai/zu"
 )
 
 var tgURL = `https://tanks.gg/api/list`
@@ -35,18 +36,14 @@ func getTgMap() (m map[string]*pb.TGRow, err error) {
 
 func tgFile() (ab []byte, err error) {
 
-	file := `tg.json`
+	file := `data/tg.json`
 
 	defer zj.Watch(&err)
 
-	rsp, err := util.HTTPNoProxyGet(tgURL)
-	zj.J(err)
+	ab, err = zu.FetchURL(tgURL)
 	if err == nil {
-		ab, err = io.ReadAll(rsp.Body)
-		if err == nil {
-			util.WriteFile(file, ab)
-			return
-		}
+		util.WriteFile(file, ab)
+		return
 	}
 	return util.ReadFile(file)
 }
