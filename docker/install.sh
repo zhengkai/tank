@@ -14,10 +14,8 @@ sudo docker rm tank || :
 # sudo cat /tmp/docker-tank.tar | sudo docker load
 
 sudo docker run -d --name tank \
-	--env "TMP_PATH=/output/tmp" \
-	--env "OUTPUT_PATH=/output" \
 	--publish "127.0.0.1:21024:80" \
-	--mount type=bind,source=/www/tank/output,target=/output \
+	--mount type=bind,source=/www/tank/static,target=/static \
 	--mount type=bind,source=/www/tank/log,target=/log \
 	--restart always \
 	tank

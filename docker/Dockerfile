@@ -33,6 +33,7 @@ COPY --from=builder /project/server/dist/prod/tank-server-next /tank-server
 ENV TZ="Asia/Shanghai"
 
 ENV TANK_MYSQL="tank:tank@tcp(172.17.0.1:3306)/tank"
+ENV TANK_STATIC_DIR="/static"
 
 EXPOSE 80
 
