@@ -7,8 +7,8 @@ sleep 1000
 echo
 cd /www/tank/static/data || exit 1
 
-find . -type f \( -name '*.gz' -o -name '*.br' \) -delete
-find . -type f \( -name '*.json' -o -name '*.pb' \) -size +1k -exec sh -c '
+sudo find . -type f \( -name '*.gz' -o -name '*.br' \) -delete
+sudo find . -type f \( -name '*.json' -o -name '*.pb' \) -size +1k -exec sh -c '
   for f; do
     gzip -c "$f" > "$f.gz"
     brotli -q 11 -o "$f.br" "$f"
