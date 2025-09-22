@@ -6,4 +6,4 @@ var StaticDir = `/www/tank/static`
 var MySQL = `tank:tank@/tank`
 
 // AssertCount 坦克数据至少应该有多少
-const AssertCount = 600
+const AssertCount = 800
