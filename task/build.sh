@@ -2,7 +2,7 @@
 
 curl -s --max-time 10 --noproxy --ipv4 http://localhost:21024/task/build
 
-sleep 1000
+sleep 100
 
 echo
 cd /www/tank/static/data || exit 1
