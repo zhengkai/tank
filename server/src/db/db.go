@@ -41,6 +41,8 @@ func Close() {
 // WaitConn 服务器刚启的时候可能 app 启动了但是 mysql 没启动，一直等到 mysql 正常运行
 func WaitConn(dns string) {
 
+	var prevErr string
+
 	for {
 		err := Conn(dns)
 		if err != nil {
@@ -51,7 +53,10 @@ func WaitConn(dns string) {
 
 		err = d.Ping()
 		if err != nil {
-			zj.W(`db`, err)
+			if prevErr != err.Error() {
+				prevErr = err.Error()
+				zj.W(`db`, err)
+			}
 			time.Sleep(time.Second)
 			continue
 		}

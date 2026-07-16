@@ -1,4 +1,4 @@
-SHELL:=/bin/bash
+SHELL:=/usr/bin/env bash
 
 server:
 	protoc --go_out=../server/src *.proto

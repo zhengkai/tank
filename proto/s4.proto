@@ -1,0 +1,12 @@
+syntax = "proto3";
+option go_package = "/pb";
+package pb;
+
+message S4List {
+	repeated S4Row data = 1;
+}
+
+message S4Row {
+	uint32 tank_id = 1;
+	string name = 2;
+}
