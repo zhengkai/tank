@@ -28,6 +28,12 @@ func defaultSID() {
 	db.SIDWiki(25617, `G158_VK2801_105_SPXXI`)
 	db.SIDWiki(55377, `GB108_A46`)
 	db.SIDWiki(59169, `A117_T26E5_Patriot`)
+	db.SIDWiki(68401, `G98_Waffentrager_E100_CFE_T`)
+	db.SIDWiki(65601, `F128_SFAC_105`)
+	db.SIDWiki(43809, `A168_XM_57`)
+	db.SIDWiki(49681, `G16_PzVIB_Tiger_II_F`)
+	db.SIDWiki(67377, `Ch47_BZ_176`)
+	db.SIDWiki(50721, `A136_T42`)
 }
 
 var ignoreSID = []uint32{
