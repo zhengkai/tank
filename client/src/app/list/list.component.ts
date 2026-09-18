@@ -672,9 +672,6 @@ export class ListComponent implements OnInit {
 
 	historyClick(id: number) {
 		if (!id) {
-			if (this.historyKey === 'battle') {
-				this.byBattle = true;
-			}
 			this.select();
 		}
 		this.history(id);
